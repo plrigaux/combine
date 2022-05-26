@@ -1,6 +1,5 @@
-<p>comb-table works!</p>
-
 <table>
-
-    <tr ></tr>
+    <tr *ngFor="let item of combinations; index as i;">
+        <td *ngFor="let val of getRowElem(item)" [ngClass]="classFromVal(val)">{{val}}</td>
+    </tr>
 </table>
