@@ -27,14 +27,14 @@ export class CombTableComponent implements OnInit {
 
     let blabla = []
 
-
+/*
     for (let combination of combinations2(+this.total, +this.nbpicks)) {
       console.log(combination);
     }
-
+*/
     this.combinations = combinations2(+this.total, +this.nbpicks)
 
-    console.log(this.combinations)
+    //console.log(this.combinations)
 
   }
 
@@ -72,11 +72,11 @@ function* combinations(n: number, k: number): IterableIterator<number[]> {
 function combinations2(n: number, k: number): number[][] {
 
   let combList: number[][] = []
-  let maxes = getMaxes(n, k)
+  //let maxes = getMaxes(n, k)
   let all = getAllNum(n, k)
-  console.log("maxes", maxes)
+  //console.log("maxes", maxes)
 
-  console.log("all", all)
+  //console.log("all", all)
 
   combinations2x(n, k, 0, new Array(k), combList)
 
