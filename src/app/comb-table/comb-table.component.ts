@@ -44,6 +44,7 @@ export class CombTableComponent implements OnInit {
     console.log("dddddddddddddddddddddddddddddddddddd")
     getCombIndex([1, 4], 6, 2)
     */
+    getCombIndex([1, 2,3], 7, 3, 0, 0)
   }
 
   createCombTable() {
@@ -76,7 +77,7 @@ export class CombTableComponent implements OnInit {
 
   getCombIndex(comb: number[], n: number, k: number): number {
 
-    return getCombIndex(comb, n, k)
+    return getCombIndex(comb, n, k, 0, 0)
     //return 0
   }
 }
@@ -143,17 +144,17 @@ function getAllNum(n: number, k: number): number[] {
   return maxes
 }
 
-function getCombIndex(comb: number[], n: number, k: number): number {
+function getCombIndex(comb: number[], n: number, k: number, prev : number, idx : number): number {
 
-  //console.log(`[${comb}] n ${n}, k ${k}, j ${j}`)
+  console.log(`[${comb}] n ${n}, k ${k}, prev ${prev} idx ${idx}`)
   let index = 0
 
-  if (comb.length == 0) {
+  if (idx >= comb.length) {
     return index
   }
 
-  let ball = comb[0]
-  //console.log("ball", ball)
+  let ball = comb[idx] - prev
+  console.log("ball", ball, `comb[idx] ${comb[idx]} - prev ${prev}`)
 
   if (k == 1) { 
     index = ball
@@ -173,15 +174,17 @@ function getCombIndex(comb: number[], n: number, k: number): number {
 
 
   //let sh = ball
+  /*
   for (let f = 1; f < comb.length; f++) {
     let shift = comb[f] - ball
     comb2.push(shift)
   }
+  */
 
-  let sub_index = getCombIndex(comb2, n - ball, k - 1)
+  let sub_index = getCombIndex(comb, n - ball, k - 1, comb[idx], idx + 1)
   let total_index = index + sub_index
 
-  //console.log(`comb [${comb}], total_index ${total_index}, index ${index}, sub_index ${sub_index}`)
+  console.log(`comb [${comb}], total_index ${total_index}, index ${index}, sub_index ${sub_index}`)
   return total_index
 }
 
