@@ -36,15 +36,15 @@ export class CombTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.createCombTable()
-/*
-    getCombIndex([2, 3, 5], this.total, this.nbpicks, 0)
-    console.log("dddddddddddddddddddddddddddddddddddd")
-    getCombIndex([2, 4], 6, 2)
-
-    console.log("dddddddddddddddddddddddddddddddddddd")
-    getCombIndex([1, 4], 6, 2)
-    */
-    getCombIndex([1, 2,3], 7, 3, 0, 0)
+    /*
+        getCombIndex([2, 3, 5], this.total, this.nbpicks, 0)
+        console.log("dddddddddddddddddddddddddddddddddddd")
+        getCombIndex([2, 4], 6, 2)
+    
+        console.log("dddddddddddddddddddddddddddddddddddd")
+        getCombIndex([1, 4], 6, 2)
+        */
+    getCombIndex([1, 2, 3], 7, 3, 0, 0)
   }
 
   createCombTable() {
@@ -144,48 +144,24 @@ function getAllNum(n: number, k: number): number[] {
   return maxes
 }
 
-function getCombIndex(comb: number[], n: number, k: number, prev : number, idx : number): number {
-
-  console.log(`[${comb}] n ${n}, k ${k}, prev ${prev} idx ${idx}`)
-  let index = 0
+function getCombIndex(comb: number[], n: number, k: number, prev: number, idx: number): number {
 
   if (idx >= comb.length) {
-    return index
+    return 1
   }
 
-  let ball = comb[idx] - prev
-  console.log("ball", ball, `comb[idx] ${comb[idx]} - prev ${prev}`)
+  let original_ball = comb[idx]
+  let ball = original_ball - prev
+  let nextK = k - 1
 
-  if (k == 1) { 
-    index = ball
-  } else {
-    //console.log(`for (let i = (n - ball + 1) ${n - ball + 1}; i < n ${n}; i++) {`)
-    for (let i = (n - ball + 1); i < n; i++) {
-      
-      let combof_below: number = combinationsNum(i, (k - 1))
-      //console.log(`combinationsNum(i "${i}", (k - (j + 1) "${k - 1}")`, `combof_below ${combof_below}`)
-      //console.log(`index ${index} combof_below ${combof_below}`)
-      index += combof_below
-    }
+  let index = 0
+  for (let i = (n - ball + 1); i < n; i++) {
+    index += combinationsNum(i, nextK)
   }
-  //console.log(`index b [${comb}]`, index)
 
-  let comb2: number[] = []
+  index += getCombIndex(comb, n - ball, nextK, original_ball, idx + 1)
 
-
-  //let sh = ball
-  /*
-  for (let f = 1; f < comb.length; f++) {
-    let shift = comb[f] - ball
-    comb2.push(shift)
-  }
-  */
-
-  let sub_index = getCombIndex(comb, n - ball, k - 1, comb[idx], idx + 1)
-  let total_index = index + sub_index
-
-  console.log(`comb [${comb}], total_index ${total_index}, index ${index}, sub_index ${sub_index}`)
-  return total_index
+  return index
 }
 
 
