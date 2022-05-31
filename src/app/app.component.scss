@@ -31,3 +31,20 @@ mat-sidenav {
 mat-sidenav-container {
     height: calc(100vh - 65px);
 }
+
+p {
+    font-size: 2rem;
+}
+
+$ball-size: 2em;
+.numberCircle {
+    display: inline-block;
+    width: $ball-size;
+    line-height: $ball-size;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 32px;
+    border: 2px solid #666;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+}

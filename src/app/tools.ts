@@ -83,7 +83,7 @@ export function getCombinationIndex(comb: number[], n: number, k: number, prev: 
 
     let index = 0
     for (let i = (n - ball + 1); i < n; i++) {
-        index += combinationsNum(i, nextK)
+        index += calculateOdds(i, nextK)
     }
 
     index += getCombinationIndex(comb, n - ball, nextK, original_ball, idx + 1)
@@ -109,7 +109,7 @@ function getCombIndex1(comb: number[], n: number, k: number): number {
             continue;
         }
 
-        let combof_below: number = combinationsNum(n - 1, jump - 1)
+        let combof_below: number = calculateOdds(n - 1, jump - 1)
         index += combof_below
         console.log(combof_below)
 
@@ -121,67 +121,47 @@ function getCombIndex1(comb: number[], n: number, k: number): number {
     return index
 }
 
-export function combinationsNum(n: number, r: number): number {
-    let num = factorialFrom(n, n - r + 1)
-    let den = factorial(r)
+export function calculateOdds(n: number, k: number): number {
+    let num = factorialFrom(n, n - k + 1)
+    let den = factorial(k)
 
     let val = num / den
 
     return val
 }
 
+export function getCombinationfromIndex(n: number, k: number, index: number): number[] {
+    let odds = calculateOdds(n, k)
 
-function combinations(n: number, k: number): number {
-    let num = factorial(n)
-    let den = factorial(k) * factorial(n - k)
-  
-    let val = num / den
-    //console.log(num , den, "  ", val)
-    return val
-  
-  }
-  
-  function combinationsFaster(n: number, k: number): number {
-    let num = factorialFrom(n, n - k + 1)
-    let den = factorial(k)
-  
-    let val = num / den
-  
-    return val
-  }
-  
-  export function getCombinationfromIndex(n: number, k: number, index: number) {
-    let c = combinationsFaster(n, k)
-
-    if (index > c) {
-      console.error("out", c, index)
-      return
+    if (index > odds) {
+        console.error("out", odds, index)
+        return []
     }
 
-    console.log("combinations", c, index)
+    console.log("combinations", odds, index)
     let result: number[] = []
     _getCombinationfromIndex(n, k, index, 0, result, 1)
 
-    console.log("res idx", index, result)
-  }
+    return result
+}
 
-  function _getCombinationfromIndex(n: number, k: number, id: number, base: number, result: number[], level: number) {
+function _getCombinationfromIndex(n: number, k: number, id: number, base: number, result: number[], level: number) {
 
     if (k == 1) {
-      //console.warn("n", n - 1, r - 1, base, id)
-      result.push(id - base + level - 1)
-      return
+        //console.warn("n", n - 1, r - 1, base, id)
+        result.push(id - base + level - 1)
+        return
     }
 
-    let combof_below: number = combinationsFaster(n - 1, k - 1)
+    let combof_below: number = calculateOdds(n - 1, k - 1)
     //console.log("base", base, "c", combof_below, "id", id, "n", n, "r", r, "lvl", level, result)
 
     if (id <= combof_below + base) {
-      result.push(level)
-      //console.log("lower")
-      _getCombinationfromIndex(n - 1, k - 1, id, base, result, level + 1)
+        result.push(level)
+        //console.log("lower")
+        _getCombinationfromIndex(n - 1, k - 1, id, base, result, level + 1)
     } else {
-      //console.log("upper")
-      _getCombinationfromIndex(n - 1, k, id, base + combof_below, result, level + 1)
+        //console.log("upper")
+        _getCombinationfromIndex(n - 1, k, id, base + combof_below, result, level + 1)
     }
-  }
+}

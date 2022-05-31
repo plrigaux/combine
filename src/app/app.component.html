@@ -1,37 +1,38 @@
-<mat-toolbar>
+<mat-card>
+  <mat-card-title>Actions Buttons</mat-card-title>
+  <mat-card-subtitle>Start</mat-card-subtitle>
 
-  Responsive side navigation
-</mat-toolbar>
 
-<mat-sidenav-container>
-  <mat-sidenav class="mat-elevation-z8">
-    <button mat-button class="menu-button">
-      <mat-icon>person</mat-icon>
-      <span>Profile</span>
-  </button>
-  <button mat-button class="menu-button">
-      <mat-icon>info</mat-icon>
-      <span>About</span>
-  </button>
-
-  <mat-divider></mat-divider>
-  Hello
-
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Postal Code</mat-label>
-    <input matInput #postalCode maxlength="5" placeholder="Ex. 94105" value="94043">
-    <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Total</mat-label>
+    <input matInput type="number" [(ngModel)]="totalNbNumbers" (focusout)="saveData()">
   </mat-form-field>
-  </mat-sidenav>
 
-  <mat-sidenav-content>
- <p>Comb 50 7 = {{comb(50, 7)}}</p>
-     
-      <app-comb-table total="7" nbpicks="3"></app-comb-table>
 
-      <app-comb-table total="6" nbpicks="2"></app-comb-table>
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Balls</mat-label>
+    <input matInput type="number" [(ngModel)]="drawNbNumber" (focusout)="saveData()">
+  </mat-form-field>
+
+  <p>
+    Odds {{combination()}}
+  </p>
+
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Index</mat-label>
+    <input matInput type="number" [(ngModel)]="oddsIndex" (change)="onCombIndexChange($event)" (focusout)="saveData()">
+  </mat-form-field>
+  <button mat-button (click)="random()">Random</button>
+  <p>
+    <span *ngFor="let draw of combinationOutput" class="numberCircle">{{draw}}</span>
+  </p>
+
+</mat-card>
+<br>
+
+<app-comb-table total="7" nbpicks="3"></app-comb-table>
+
+<app-comb-table total="6" nbpicks="2"></app-comb-table>
 <!--
       <app-comb-table total="6" nbpicks="3"></app-comb-table>
 -->
-  </mat-sidenav-content>
-</mat-sidenav-container>
