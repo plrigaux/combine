@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { combinationsNum, getCombinationfromIndex } from './tools';
+import { calculateOdds, getCombinationfromIndex } from './tools';
 
 @Component({
   selector: 'app-root',
@@ -10,45 +10,77 @@ import { combinationsNum, getCombinationfromIndex } from './tools';
 })
 
 
-export class AppComponent implements AfterViewInit {
-  @ViewChild(MatSidenav)
-  sidenav!: MatSidenav;
+export class AppComponent implements OnInit {
 
-  constructor(private observer: BreakpointObserver) { }
+  totalNbNumbers: any = 0
+  drawNbNumber: any = 0
+  oddsIndex: any = 0
+  combinationOutput: number[] = []
 
-  ngAfterViewInit() {
-    /*
-    this.observer.observe(['(max-width: 800px)']).subscribe((res) => {
-      if (res.matches) {
-        this.sidenav.mode = 'over';
-        this.sidenav.close();
-      } else {
-        this.sidenav.mode = 'side';
-        this.sidenav.open();
-      }
-    });
-    */
-    /*
-     this.getN(7, 3, 6)
-     this.getN(7, 3, 7)
-     this.getN(7, 3, 8)
-     this.getN(7, 3, 9)
-     this.getN(7, 3, 10)
-     */
-/*
-    for (let i = 1; i <= 35; i++) {
-      this.getN(7, 3, i)
+  constructor() { }
+
+  ngOnInit() {
+    this.loadData();
+
+    this.combbase_on_index()
+  }
+
+  combination() {
+    return calculateOdds(this.totalNbNumbers, this.drawNbNumber)
+  }
+
+  combbase_on_index() {
+
+    if (!this.oddsIndex) {
+      this.combinationOutput = []
     }
 
-    */
+    let comb = getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this.oddsIndex)
 
-    //this.getN(50, 7, 1000000)
-    getCombinationfromIndex(50, 7,  combinationsNum(50, 7)/2)
+    this.combinationOutput = comb
+
+    this.saveData()
   }
 
-  comb(n: number, r: number) {
-    return combinationsNum(n, r)
+  onCombIndexChange($event: any) {
+    this.combbase_on_index()
   }
 
+  random() {
+    this.oddsIndex = Math.floor(Math.random() * calculateOdds(this.totalNbNumbers, this.drawNbNumber))
 
+    this.combbase_on_index()
+  }
+
+  saveData() {
+
+    let obj: SaveData = {
+
+      total: this.totalNbNumbers,
+      draw: this.drawNbNumber,
+      combIndex: this.oddsIndex
+    }
+
+    let str = JSON.stringify(obj)
+
+    localStorage.setItem('DATA', str)
+  }
+
+  private loadData() {
+    let data = localStorage.getItem('DATA');
+    if (data) {
+      let parsed = JSON.parse(data) as SaveData;
+
+      this.oddsIndex = parsed.combIndex;
+      this.totalNbNumbers = parsed.total;
+      this.drawNbNumber = parsed.draw;
+    }
+  }
+
+}
+
+interface SaveData {
+  total: number,
+  draw: number,
+  combIndex: number
 }
