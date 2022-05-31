@@ -1,7 +1,7 @@
 import { newArray } from '@angular/compiler/src/util';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterLinkWithHref } from '@angular/router';
-import { generateCombinationsList, getCombinationIndex } from '../tools';
+import { generateCombinationsList, getOddsIndex } from '../tools';
 
 @Component({
   selector: 'app-comb-table',
@@ -70,7 +70,7 @@ export class CombTableComponent implements OnInit {
 
   getCombIndex(comb: number[], n: number, k: number): number {
 
-    return getCombinationIndex(comb, n, k, 0, 0)
+    return getOddsIndex(comb, n, k)
     //return 0
   }
 }

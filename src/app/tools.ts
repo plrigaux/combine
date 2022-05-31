@@ -71,13 +71,17 @@ function getAllNum(n: number, k: number): number[] {
     return maxes
 }
 
-export function getCombinationIndex(comb: number[], n: number, k: number, prev: number, idx: number): number {
+export function getOddsIndex(combination: number[], n: number, k: number): number {
+    return getCombinationIndex(combination, n, k, 0, 0)
+}
 
-    if (idx >= comb.length) {
+function getCombinationIndex(combination: number[], n: number, k: number, prev: number, idx: number): number {
+
+    if (idx >= combination.length) {
         return 1
     }
 
-    let original_ball = comb[idx]
+    let original_ball = combination[idx]
     let ball = original_ball - prev
     let nextK = k - 1
 
@@ -86,7 +90,7 @@ export function getCombinationIndex(comb: number[], n: number, k: number, prev: 
         index += calculateOdds(i, nextK)
     }
 
-    index += getCombinationIndex(comb, n - ball, nextK, original_ball, idx + 1)
+    index += getCombinationIndex(combination, n - ball, nextK, original_ball, idx + 1)
 
     return index
 }

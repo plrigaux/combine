@@ -24,9 +24,19 @@
   </mat-form-field>
   <button mat-button (click)="random()">Random</button>
   <p>
-    <span *ngFor="let draw of combinationOutput" class="numberCircle">{{draw}}</span>
+    <span *ngFor="let draw of combinationOutput" class="numberCircle drawed">{{draw}}</span>
   </p>
 
+</mat-card>
+<mat-card>
+  <mat-card-title>Get the oddsIndex</mat-card-title>
+
+  <p>
+    Odds index {{showOddIndex()}}
+  </p>
+  <p>
+    <span *ngFor="let ball of getTotalNumbers()" class="numberCircle" [ngClass]="drawed(ball)" (click)="clickBall(ball)">{{ball}}</span>
+  </p>
 </mat-card>
 <br>
 

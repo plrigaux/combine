@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { calculateOdds, getCombinationfromIndex } from './tools';
+import { calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
 
 @Component({
   selector: 'app-root',
@@ -58,7 +58,8 @@ export class AppComponent implements OnInit {
 
       total: this.totalNbNumbers,
       draw: this.drawNbNumber,
-      combIndex: this.oddsIndex
+      combIndex: this.oddsIndex,
+      selected: [...this.selected]
     }
 
     let str = JSON.stringify(obj)
@@ -74,13 +75,55 @@ export class AppComponent implements OnInit {
       this.oddsIndex = parsed.combIndex;
       this.totalNbNumbers = parsed.total;
       this.drawNbNumber = parsed.draw;
+      this.selected = new Set(parsed.selected)
     }
   }
 
+
+  selected = new Set<number>()
+  allNumbers: number[] = []
+
+  getTotalNumbers(): number[] {
+
+    if (this.allNumbers.length != this.totalNbNumbers) {
+      this.allNumbers = Array.from([...Array(this.totalNbNumbers).keys()], n => n + 1)
+      let a: number[] = [...this.selected].filter(n => n > this.totalNbNumbers)
+
+      for (const b of a) {
+        this.selected.delete(b)
+      }
+    }
+    return this.allNumbers
+  }
+
+  clickBall(ball: number) {
+
+    if (!this.selected.delete(ball)) {
+      if (this.selected.size < this.drawNbNumber) {
+        this.selected.add(ball)
+      }
+    }
+  }
+
+  drawed(ball: number): string {
+    return this.selected.has(ball) ? "drawed" : ""
+  }
+
+  showOddIndex(): string {
+    if (this.selected.size != this.drawNbNumber) {
+      return ""
+    }
+    let s: number[] = [...this.selected].sort();
+    let val = getOddsIndex(s, this.totalNbNumbers, this.drawNbNumber)
+    //console.log(s, this.totalNbNumbers, this.drawNbNumber)
+    this.saveData()
+    return val.toString()
+  }
 }
 
 interface SaveData {
   total: number,
   draw: number,
   combIndex: number
+  selected: number[]
 }
