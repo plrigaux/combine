@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
 import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
 import { LEADING_TRIVIA_CHARS } from '@angular/compiler/src/render3/view/template';
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -19,17 +20,9 @@ export class AppComponent implements OnInit {
   set totalNbNumbers(val: any) {
     this._totalNbNumbers = Number(val)
 
-    /*
-        let a: number[] = [...this.selected].filter(n => n > this.totalNbNumbers)
-    
-        for (const b of a) {
-          this.selected.delete(b)
-        }
-    */
-
-    for (const b of this.selected) {
-      if (b > this.totalNbNumbers) {
-        this.selected.delete(b)
+    for (const selectedNumber of this._selected) {
+      if (selectedNumber > this.totalNbNumbers) {
+        this._selected.delete(selectedNumber)
       }
     }
   }
@@ -42,7 +35,7 @@ export class AppComponent implements OnInit {
   oddsIndex: any = 0
   combinationOutput: number[] = []
 
-  constructor() { }
+  constructor(@Inject(LOCALE_ID) public locale: string,) { }
 
   ngOnInit() {
     this.loadData();
@@ -53,7 +46,7 @@ export class AppComponent implements OnInit {
   private _odds: number = 0
   combination() {
     this._odds = calculateOdds(this.totalNbNumbers, this.drawNbNumber)
-    return this._odds
+    return formatNumber(this._odds, this.locale)
   }
 
   combbase_on_index() {
@@ -86,7 +79,7 @@ export class AppComponent implements OnInit {
       total: this.totalNbNumbers,
       draw: this.drawNbNumber,
       combIndex: this.oddsIndex,
-      selected: [...this.selected]
+      selected: [...this._selected]
     }
 
     let str = JSON.stringify(obj)
@@ -102,52 +95,53 @@ export class AppComponent implements OnInit {
       this.oddsIndex = parsed.combIndex;
       this.totalNbNumbers = parsed.total;
       this.drawNbNumber = parsed.draw;
-      this.selected = new Set(parsed.selected)
+      this._selected = new Set(parsed.selected)
     }
   }
 
 
-  selected: Set<number> = new Set<number>()
-  allNumbers: number[] = []
+  private _selected: Set<number> = new Set<number>()
+  private _allGeneratedNumbers: number[] = []
 
   getTotalNumbers(): number[] {
 
-    if (this.allNumbers.length != this.totalNbNumbers) {
-      this.allNumbers = Array.from([...Array(this.totalNbNumbers).keys()], n => +n + 1)
-      let a: number[] = [...this.selected].filter(n => n > this.totalNbNumbers)
+    if (this._allGeneratedNumbers.length != this.totalNbNumbers) {
 
-      for (const b of a) {
-        this.selected.delete(b)
-      }
+      this._allGeneratedNumbers = Array.from({ length: this.totalNbNumbers }, (_, i) => i + 1)
+
+      this._selected = new Set(
+        [...this._selected].filter(x => x > this.totalNbNumbers)
+      );
     }
-    return this.allNumbers
+    return this._allGeneratedNumbers
   }
 
   clickBall(ball: number) {
 
-    if (!this.selected.delete(ball)) {
-      if (this.selected.size < this.drawNbNumber) {
-        this.selected.add(ball)
+    if (!this._selected.delete(ball)) {
+      if (this._selected.size < this.drawNbNumber) {
+        this._selected.add(ball)
       }
     }
   }
 
   drawed(ball: number): string {
-    return this.selected.has(ball) ? "drawed" : ""
+    return this._selected.has(ball) ? "drawed" : ""
   }
-
 
   private _oddsIndex: number = 0
 
   showOddIndex(): string {
-    if (this.selected.size != this.drawNbNumber) {
+    if (this._selected.size != this.drawNbNumber) {
       return ""
     }
-    let s: number[] = [...this.selected].sort((a, b) => a - b);
-    this._oddsIndex = getOddsIndex(s, this.totalNbNumbers, this.drawNbNumber)
+
+    let selectedSortedArray: number[] = [...this._selected].sort((a, b) => a - b);
+    this._oddsIndex = getOddsIndex(selectedSortedArray, this.totalNbNumbers, this.drawNbNumber)
     //console.log(s, this.totalNbNumbers, this.drawNbNumber)
     this.saveData()
-    return this._oddsIndex.toString()
+
+    return formatNumber(this._oddsIndex, this.locale)
   }
 
   previous() {
@@ -156,7 +150,7 @@ export class AppComponent implements OnInit {
     }
 
     this._oddsIndex--
-    this.selected = new Set(getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this._oddsIndex))
+    this._selected = new Set(getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this._oddsIndex))
   }
 
   next() {
@@ -165,21 +159,22 @@ export class AppComponent implements OnInit {
     }
     this._oddsIndex++
     let comb = getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this._oddsIndex)
-    this.selected = new Set(comb)
+    this._selected = new Set(comb)
   }
 
   private step = 10;
 
   stepper(): Iterable<number> {
-    return new Stepper(this.totalNbNumbers - 1, this.step)
+    //return new Stepper(this.totalNbNumbers - 1, this.step)
+    return range(0, this.totalNbNumbers - 1, this.step)
   }
 
   substepper(start: number): Iterable<number> {
     let limit = Math.min(start + this.step, this.totalNbNumbers)
-    return new Stepper(limit, 1, start + 1)
+    //return new Stepper(limit, 1, start + 1)
+    return range(start, limit, 1)
   }
 }
-
 
 interface SaveData {
   total: number,
@@ -188,6 +183,10 @@ interface SaveData {
   selected: number[]
 }
 
+const range = (start: number, stop: number, step: number) => {
+  return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
+}
+/*
 class Stepper implements Iterable<number> {
 
   private _limit
@@ -200,11 +199,10 @@ class Stepper implements Iterable<number> {
     this._start = start
   }
 
-  [Symbol.iterator]() {
+  [Symbol.iterator](): Iterator<number> {
     let counter = this._start
     return {
       next: (): IteratorResult<number> => {
-
         let value = counter
         let done = counter > this._limit
         counter += this._step
@@ -216,3 +214,4 @@ class Stepper implements Iterable<number> {
     }
   }
 }
+*/
