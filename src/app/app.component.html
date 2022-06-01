@@ -35,11 +35,10 @@
     Odds index {{showOddIndex()}} 
   </p>
 
-  <button mat-button [disabled]="!showOddIndex()" (click)="previous()">Previous</button> 
-  <button mat-button [disabled]="!showOddIndex()" (click)="next()">Next</button>
+  <button mat-button [disabled]="previousDisable()" (click)="previous()">Previous</button> 
+  <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
 
   <div *ngFor="let step of stepper()">
-
     <span *ngFor="let ball of substepper(step)" class="numberCircle" [ngClass]="drawed(ball)"
       (click)="clickBall(ball)">{{ball}}</span>
 

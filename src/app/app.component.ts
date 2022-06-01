@@ -1,10 +1,6 @@
-import { AfterViewInit, Component, Inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
-import { ColdObservable } from 'rxjs/internal/testing/ColdObservable';
-import { LEADING_TRIVIA_CHARS } from '@angular/compiler/src/render3/view/template';
 import { formatNumber } from '@angular/common';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
+import { calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
 
 @Component({
   selector: 'app-root',
@@ -131,8 +127,13 @@ export class AppComponent implements OnInit {
 
   private _oddsIndex: number = 0
 
+
+  private _isAllNumberdrawed(): boolean {
+    return this._selected.size == this.drawNbNumber
+  }
+
   showOddIndex(): string {
-    if (this._selected.size != this.drawNbNumber) {
+    if (!this._isAllNumberdrawed()) {
       return ""
     }
 
@@ -144,13 +145,22 @@ export class AppComponent implements OnInit {
     return formatNumber(this._oddsIndex, this.locale)
   }
 
+  previousDisable(): boolean {
+    return !(this._isAllNumberdrawed() && this._oddsIndex > 1)
+  }
+
+  nextDisable(): boolean {
+    return !(this._isAllNumberdrawed() && this._oddsIndex < this._odds)
+  }
+
   previous() {
     if (this._oddsIndex <= 1) {
       return
     }
 
     this._oddsIndex--
-    this._selected = new Set(getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this._oddsIndex))
+    let comb = getCombinationfromIndex(this.totalNbNumbers, this.drawNbNumber, this._oddsIndex)
+    this._selected = new Set(comb)
   }
 
   next() {
@@ -166,13 +176,13 @@ export class AppComponent implements OnInit {
 
   stepper(): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
-    return range(0, this.totalNbNumbers - 1, this.step)
+    return setRange(0, this.totalNbNumbers - 1, this.step)
   }
 
   substepper(start: number): Iterable<number> {
     let limit = Math.min(start + this.step, this.totalNbNumbers)
     //return new Stepper(limit, 1, start + 1)
-    return range(start, limit, 1)
+    return setRange(start + 1, limit, 1)
   }
 }
 
@@ -183,35 +193,6 @@ interface SaveData {
   selected: number[]
 }
 
-const range = (start: number, stop: number, step: number) => {
+const setRange = (start: number, stop: number, step: number) : number[] => {
   return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }
-/*
-class Stepper implements Iterable<number> {
-
-  private _limit
-  private _step
-  private _start
-
-  constructor(limit: number, step: number = 1, start = 0) {
-    this._limit = limit
-    this._step = step
-    this._start = start
-  }
-
-  [Symbol.iterator](): Iterator<number> {
-    let counter = this._start
-    return {
-      next: (): IteratorResult<number> => {
-        let value = counter
-        let done = counter > this._limit
-        counter += this._step
-        return {
-          done: done,
-          value: value
-        }
-      }
-    }
-  }
-}
-*/
