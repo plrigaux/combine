@@ -138,7 +138,7 @@ export function getCombinationfromIndex(n: number, k: number, index: number): nu
     let odds = calculateOdds(n, k)
 
     if (index > odds) {
-        console.error("out", odds, index)
+        console.warn("getCombinationfromIndex index > odds", index, odds)
         return []
     }
 

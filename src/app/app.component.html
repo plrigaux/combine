@@ -32,11 +32,19 @@
   <mat-card-title>Get the oddsIndex</mat-card-title>
 
   <p>
-    Odds index {{showOddIndex()}}
+    Odds index {{showOddIndex()}} 
   </p>
-  <p>
-    <span *ngFor="let ball of getTotalNumbers()" class="numberCircle" [ngClass]="drawed(ball)" (click)="clickBall(ball)">{{ball}}</span>
-  </p>
+
+  <button mat-button [disabled]="!showOddIndex()" (click)="previous()">Previous</button> 
+  <button mat-button [disabled]="!showOddIndex()" (click)="next()">Next</button>
+
+  <div *ngFor="let step of stepper()">
+
+    <span *ngFor="let ball of substepper(step)" class="numberCircle" [ngClass]="drawed(ball)"
+      (click)="clickBall(ball)">{{ball}}</span>
+
+  </div>
+
 </mat-card>
 <br>
 
