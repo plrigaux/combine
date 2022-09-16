@@ -169,3 +169,18 @@ function _getCombinationfromIndex(n: number, k: number, id: number, base: number
         _getCombinationfromIndex(n - 1, k, id, base + combof_below, result, level + 1)
     }
 }
+
+export function angle() : number {
+
+    const lat1 = 45.45601525767227
+    const long1 = -73.54996188669251
+
+    const lat2 = 40.7335166835945
+    const long2 = -74.00306387532882
+
+    const dy = lat2 - lat1;
+
+    const dx = Math.cos(Math.PI / 180 * lat1) * (long2 - long1);
+    const angle = Math.atan2(dy, dx);
+    return angle
+}

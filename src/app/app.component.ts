@@ -1,6 +1,6 @@
 import { formatNumber } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
+import { angle, calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
 
 @Component({
   selector: 'app-root',
@@ -183,6 +183,10 @@ export class AppComponent implements OnInit {
     let limit = Math.min(start + this.step, this.totalNbNumbers)
     //return new Stepper(limit, 1, start + 1)
     return setRange(start + 1, limit, 1)
+  }
+
+  angleShow() : number {
+    return angle()
   }
 }
 
