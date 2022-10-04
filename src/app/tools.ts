@@ -170,7 +170,7 @@ function _getCombinationfromIndex(n: number, k: number, id: number, base: number
     }
 }
 
-export function angle() : number {
+export function angle(): number {
 
     const lat1 = 45.45601525767227
     const long1 = -73.54996188669251
@@ -181,6 +181,101 @@ export function angle() : number {
     const dy = lat2 - lat1;
 
     const dx = Math.cos(Math.PI / 180 * lat1) * (long2 - long1);
+
     const angle = Math.atan2(dy, dx);
     return angle
+}
+
+export interface Coordinate {
+    lat: number
+    long: number
+}
+
+export function angle3(): number {
+    const p1: Coordinate = {
+        lat: 45.45601525767227,
+        long: -73.54996188669251
+    }
+
+    const p2: Coordinate = {
+        lat: 40.7335166835945,
+        long: -74.00306387532882
+    }
+
+    return calculate(p1, p2);
+}
+
+export function angle3DEG(): number {
+
+    const angRad = angle3()
+
+    return angRad * (180 / Math.PI)
+}
+
+export const calculate = (p1: Coordinate, p2: Coordinate): number => {
+
+    const lat1 = toRadians(p1.lat)
+    const lat2 = toRadians(p2.lat)
+    const delta = toRadians(p2.long - p1.long)
+
+
+    const cosLat2 = Math.cos(lat2)
+
+
+    const X = cosLat2 * Math.sin(delta);
+    console.log(`X =  Math.cos(${p2.lat }) * sin(${delta})`)
+    console.log(`X =  ${X}`)
+    
+    const Y = Math.cos(lat1) * Math.sin(lat2) -
+        Math.sin(lat1) * cosLat2 * Math.cos(delta)
+
+
+    console.log(`Y = cos(${p1.lat}) * sin(${p2.lat}) – sin(${p1.lat}) * cos(${p2.lat}) * cos(${delta})`)
+    console.log(`Y =  ${Y}`)
+    
+
+    //X =  Math.cos(39.099912) * sin(4.381010000000003)
+//Y = cos(38.627089) * sin(39.099912) – sin(38.627089) * cos(39.099912) * cos(4.381010000000003)
+    const angle = Math.atan2(X, Y);
+
+    return angle
+}
+/*
+initialBearingTo(point) {
+    if (!(point instanceof LatLonSpherical)) point = LatLonSpherical.parse(point); // allow literal forms
+    if (this.equals(point)) return NaN; // coincident points
+
+    // tanθ = sinΔλ⋅cosφ2 / cosφ1⋅sinφ2 − sinφ1⋅cosφ2⋅cosΔλ
+    // see mathforum.org/library/drmath/view/55417.html for derivation
+
+    const φ1 = this.lat.toRadians();
+    const φ2 = point.lat.toRadians();
+    const Δλ = (point.lon - this.lon).toRadians();
+
+    const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+    const y = Math.sin(Δλ) * Math.cos(φ2);
+    const θ = Math.atan2(y, x);
+
+    const bearing = θ.toDegrees();
+
+    return Dms.wrap360(bearing);
+}
+*/
+export const toRadians = (val :number) : number =>{ return val * Math.PI / 180; };
+export const toDegrees = (val :number) : number =>{ return val * 180 / Math.PI; };
+
+export function angle2(): number {
+
+    const φ1 = 45.45601525767227
+    const λ1 = -73.54996188669251
+
+    const φ2 = 40.7335166835945
+    const λ2 = -74.00306387532882
+
+    const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
+    const x = Math.cos(φ1) * Math.sin(φ2) -
+        Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
+    const θ = Math.atan2(y, x);
+    const brng = (θ * 180 / Math.PI + 360) % 360; // in degrees
+    return brng
 }

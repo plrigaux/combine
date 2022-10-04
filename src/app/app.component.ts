@@ -1,6 +1,6 @@
 import { formatNumber } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { angle, calculateOdds, getCombinationfromIndex, getOddsIndex } from './tools';
+import { angle, angle2, angle3, angle3DEG, calculate, calculateOdds, Coordinate, getCombinationfromIndex, getOddsIndex, toDegrees } from './tools';
 
 @Component({
   selector: 'app-root',
@@ -185,10 +185,94 @@ export class AppComponent implements OnInit {
     return setRange(start + 1, limit, 1)
   }
 
-  angleShow() : number {
+  angleShow(): number {
     return angle()
   }
+
+  angleShow2(): number {
+    return angle2()
+  }
+
+  angleShow3(): number {
+    return angle3DEG()
+  }
+
+  angleShowRAD(): number {
+    return angle3()
+  }
+
+
+  angleShowEx(): number {
+
+    const p1: Coordinate = {
+      lat: 39.099912,
+      long: -94.581213
+    }
+
+    const p2: Coordinate = {
+      lat: 38.627089,
+      long: -90.200203
+    }
+
+    const angle = calculate(p1, p2)
+    return toDegrees(angle)
+  }
+
+  angleShowExMy(): number {
+    const p1: Coordinate = {
+      lat: 45.45601525767227,
+      long: -73.54996188669251
+    }
+
+    const p2: Coordinate = {
+      lat: 40.7335166835945,
+      long: -74.00306387532882
+    }
+
+    const angle = calculate(p1, p2)
+    return toDegrees(angle)
+  }
+
+
+
+  angleShowExMy3(): number {
+    const p1: Coordinate = {
+      lat: 45.45601525767227,
+      long: -73.54996188669251
+    }
+
+    const p2: Coordinate = {
+      lat: 40.7335166835945,
+      long: -74.00306387532882
+    }
+
+    const angle = calculate(p1, p2)
+    return - toDegrees(angle) + 90
+  }
+
+
+  angleShowExMyTheThisn(): number {
+    const p1: Coordinate = {
+      lat: 45.45601525767227,
+      long: -73.54996188669251
+    }
+
+    const p2: Coordinate = {
+      lat: 40.7335166835945,
+      long: -74.00306387532882
+    }
+
+    const angle = calculate(p1, p2)
+    //return (- angle + Math.PI / 2) / (2 * Math.PI)
+    return ((- angle / (2 * Math.PI)) + 0.25)
+  }
+
+  myIndex(): number {
+    const val = this.angleShowExMyTheThisn() * calculateOdds(50, 7)
+    return Math.round(val);
+  }
 }
+
 
 interface SaveData {
   total: number,
@@ -197,6 +281,6 @@ interface SaveData {
   selected: number[]
 }
 
-const setRange = (start: number, stop: number, step: number) : number[] => {
+const setRange = (start: number, stop: number, step: number): number[] => {
   return Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + (i * step));
 }

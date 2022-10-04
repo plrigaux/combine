@@ -1,6 +1,4 @@
-import { newArray } from '@angular/compiler/src/util';
 import { Component, Input, OnInit } from '@angular/core';
-import { RouterLinkWithHref } from '@angular/router';
 import { generateCombinationsList, getOddsIndex } from '../tools';
 
 @Component({

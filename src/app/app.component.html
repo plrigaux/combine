@@ -1,6 +1,27 @@
 <mat-card>
   <mat-card-title>angle</mat-card-title>
   <mat-card-subtitle>{{angleShow()}}</mat-card-subtitle>
+  <mat-card-subtitle>{{angleShow2()}}</mat-card-subtitle>
+  <p>
+    Bearing angle = {{angleShow3()}} deg {{angleShowRAD()}} rad
+  </p>
+
+  <p>
+    ex Bearing angle = {{angleShowEx()}} deg 
+  </p>
+  <p>
+    ex Bearing angle my = {{angleShowExMy()}} deg 
+  </p>
+  <p>
+    ex Bearing angle my = {{angleShowExMy3()}} deg 
+  </p>
+  <p>
+    This is It  = {{angleShowExMyTheThisn()}} deg 
+  </p>
+
+  <p>
+    This is It  = {{myIndex()}} YES
+  </p>
 </mat-card>
 
 <mat-card>
@@ -37,10 +58,10 @@
   <mat-card-title>Get the oddsIndex</mat-card-title>
 
   <p>
-    Odds index {{showOddIndex()}} 
+    Odds index {{showOddIndex()}}
   </p>
 
-  <button mat-button [disabled]="previousDisable()" (click)="previous()">Previous</button> 
+  <button mat-button [disabled]="previousDisable()" (click)="previous()">Previous</button>
   <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
 
   <div *ngFor="let step of stepper()">
