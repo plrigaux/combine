@@ -70,10 +70,13 @@
         >{{ draw }}</span
       >
 
-      <span *ngIf="power_ball_pool_size > 1"     
-      class="numberCircle drawed_power_ball"
-      >{{ combinationOutput.power_ball }}</span
-    >
+      <span
+        *ngIf="
+          power_ball_pool_size > 1 && combinationOutput.main_pool.length > 0
+        "
+        class="numberCircle drawed_power_ball"
+        >{{ combinationOutput.power_ball }}</span
+      >
     </p>
   </mat-card-content>
 </mat-card>
@@ -96,26 +99,18 @@
       >{{ ball }}</span
     >
   </div>
-
-  <div *ngFor="let step of stepper()">
-    <span
-      *ngFor="let ball of substepper(step)"
-      class="numberCircle"
-      [ngClass]="drawed(ball)"
-      (click)="clickBall(ball)"
-      >{{ ball }}</span
-    >
-  </div>
-  <p>Power Ball</p>
-  <div *ngFor="let step of stepper_power_ball()">
-    <span
-      *ngFor="let ball of substepper_power_ball(step)"
-      class="numberCircle"
-      [ngClass]="drawed(ball)"
-      (click)="clickBall(ball)"
-      >{{ ball }}</span
-    >
-  </div>
+  <ng-template [ngIf]="power_ball_pool_size > 1">
+    <h1>Power Ball</h1>
+    <div *ngFor="let step of stepper_power_ball()">
+      <span
+        *ngFor="let ball of substepper_power_ball(step)"
+        class="numberCircle"
+        [ngClass]="drawed_power_ball(ball)"
+        (click)="clickBall_power_ball(ball)"
+        >{{ ball }}</span
+      >
+    </div>
+  </ng-template>
 </mat-card>
 <br />
 

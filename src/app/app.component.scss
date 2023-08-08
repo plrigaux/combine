@@ -61,3 +61,16 @@ $ball-size: 2em;
 .drawed_power_ball {
   background-color: gold;
 }
+
+@keyframes blinker {
+  from {background-color: grey;}
+  to {background-color: white;}
+}
+
+.blink {
+  animation-name: blinker;
+  animation-duration: 0.5s;
+  animation-iteration-count : 3
+  
+}
+

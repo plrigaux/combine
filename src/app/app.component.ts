@@ -138,6 +138,8 @@ export class AppComponent implements OnInit {
   }
 
   private _selected: Set<number> = new Set<number>()
+  private _inblink: Set<number> = new Set<number>()
+  private _selected_power_ball: Set<number> = new Set<number>()
   private _allGeneratedNumbers: number[] = []
 
   getTotalNumbers (): number[] {
@@ -158,12 +160,33 @@ export class AppComponent implements OnInit {
     if (!this._selected.delete(ball)) {
       if (this._selected.size < this.drawNbNumber) {
         this._selected.add(ball)
+      } else {
+        this._inblink.add(ball)
+        setTimeout(() => {
+          this._inblink.delete(ball)
+        }, 3000)
+      }
+    }
+  }
+
+  clickBall_power_ball (ball: number) {
+    if (!this._selected_power_ball.delete(ball)) {
+      if (this._selected_power_ball.size < 1) {
+        this._selected_power_ball.add(ball)
       }
     }
   }
 
   drawed (ball: number): string {
-    return this._selected.has(ball) ? 'drawed' : ''
+    return this._selected.has(ball)
+      ? 'drawed'
+      : this._inblink.has(ball)
+      ? 'blink'
+      : ''
+  }
+
+  drawed_power_ball (ball: number): string {
+    return this._selected_power_ball.has(ball) ? 'drawed_power_ball' : ''
   }
 
   private _oddsIndex: number = 0
