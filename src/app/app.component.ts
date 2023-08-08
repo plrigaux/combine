@@ -10,6 +10,7 @@ import {
   Coordinate,
   getCombinationfromIndex,
   getOddsIndex,
+  Result,
   toDegrees
 } from './tools'
 
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
 
   drawNbNumber: any = 0
   oddsIndex: any = 0
-  combinationOutput: number[] = []
+  combinationOutput: Result = new Result(1, 1, 1)
 
   constructor (@Inject(LOCALE_ID) public locale: string) {}
 
@@ -79,7 +80,7 @@ export class AppComponent implements OnInit {
 
   combbase_on_index () {
     if (!this.oddsIndex) {
-      this.combinationOutput = []
+      this.combinationOutput = new Result(1, 1, 1)
     }
 
     let results = getCombinationfromIndex(
@@ -89,7 +90,7 @@ export class AppComponent implements OnInit {
       this.oddsIndex
     )
 
-    this.combinationOutput = results.main_pool
+    this.combinationOutput = results
 
     this.saveData()
   }

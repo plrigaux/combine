@@ -65,10 +65,15 @@
     <button mat-button (click)="random()">Random</button>
     <p>
       <span
-        *ngFor="let draw of combinationOutput"
+        *ngFor="let draw of combinationOutput.main_pool"
         class="numberCircle drawed"
         >{{ draw }}</span
       >
+
+      <span *ngIf="power_ball > 1"     
+      class="numberCircle drawed_power_ball"
+      >{{ combinationOutput.power_ball }}</span
+    >
     </p>
   </mat-card-content>
 </mat-card>
