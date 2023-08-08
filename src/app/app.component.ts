@@ -23,12 +23,12 @@ export class AppComponent implements OnInit {
   set_mega_millions () {
     this.totalNbNumbers = 70
     this.drawNbNumber = 5
-    this.power_ball = 25
+    this.power_ball_pool_size = 25
   }
   set_lotto_max () {
     this.totalNbNumbers = 50
     this.drawNbNumber = 7
-    this.power_ball = 1
+    this.power_ball_pool_size = 1
   }
   //totalNbNumbers: any = 0
   _totalNbNumbers: number = 0
@@ -48,11 +48,11 @@ export class AppComponent implements OnInit {
     return this._totalNbNumbers
   }
 
-  set power_ball (val: any) {
+  set power_ball_pool_size (val: any) {
     this._power_ball = Number(val)
   }
 
-  get power_ball () {
+  get power_ball_pool_size () {
     return this._power_ball
   }
 
@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
     this._odds = calculateOdds(
       this.totalNbNumbers,
       this.drawNbNumber,
-      this.power_ball
+      this.power_ball_pool_size
     )
     return formatNumber(this._odds, this.locale)
   }
@@ -86,7 +86,7 @@ export class AppComponent implements OnInit {
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
-      this.power_ball,
+      this.power_ball_pool_size,
       this.oddsIndex
     )
 
@@ -102,7 +102,11 @@ export class AppComponent implements OnInit {
   random () {
     this.oddsIndex = Math.floor(
       Math.random() *
-        calculateOdds(this.totalNbNumbers, this.drawNbNumber, this.power_ball)
+        calculateOdds(
+          this.totalNbNumbers,
+          this.drawNbNumber,
+          this.power_ball_pool_size
+        )
     )
 
     this.combbase_on_index()
@@ -180,7 +184,7 @@ export class AppComponent implements OnInit {
       selectedSortedArray,
       this.totalNbNumbers,
       this.drawNbNumber,
-      this.power_ball
+      this.power_ball_pool_size
     )
     //console.log(s, this.totalNbNumbers, this.drawNbNumber)
     this.saveData()
@@ -205,7 +209,7 @@ export class AppComponent implements OnInit {
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
-      this.power_ball,
+      this.power_ball_pool_size,
       this._oddsIndex
     )
     this._selected = new Set(results.main_pool)
@@ -219,7 +223,7 @@ export class AppComponent implements OnInit {
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
-      this.power_ball,
+      this.power_ball_pool_size,
       this._oddsIndex
     )
 
@@ -235,11 +239,17 @@ export class AppComponent implements OnInit {
 
   stepper_power_ball (): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
-    return setRange(0, this.power_ball - 1, this.step)
+    return setRange(0, this.power_ball_pool_size - 1, this.step)
   }
 
   substepper (start: number): Iterable<number> {
     let limit = Math.min(start + this.step, this.totalNbNumbers)
+    //return new Stepper(limit, 1, start + 1)
+    return setRange(start + 1, limit, 1)
+  }
+
+  substepper_power_ball (start: number): Iterable<number> {
+    let limit = Math.min(start + this.step, this.power_ball_pool_size)
     //return new Stepper(limit, 1, start + 1)
     return setRange(start + 1, limit, 1)
   }
