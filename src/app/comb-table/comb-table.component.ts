@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { generateCombinationsList, getOddsIndex } from '../tools';
+import { Component, Input, OnInit } from '@angular/core'
+import { generateCombinationsList, getOddsIndex } from '../tools'
 
 @Component({
   selector: 'app-comb-table',
@@ -7,22 +7,21 @@ import { generateCombinationsList, getOddsIndex } from '../tools';
   styleUrls: ['./comb-table.component.scss']
 })
 export class CombTableComponent implements OnInit {
-
   @Input()
-  set total(val: any) {
+  set total (val: any) {
     this._total = parseInt(val)
   }
 
-  get total(): number {
+  get total (): number {
     return this._total
   }
 
   @Input()
-  set nbpicks(val: any) {
+  set nbpicks (val: any) {
     this._nbpicks = parseInt(val)
   }
 
-  get nbpicks(): number {
+  get nbpicks (): number {
     return this._nbpicks
   }
 
@@ -31,16 +30,13 @@ export class CombTableComponent implements OnInit {
 
   combinations: number[][] = []
 
-  constructor() { }
+  constructor () {}
 
-  ngOnInit(): void {
+  ngOnInit (): void {
     this.createCombTable()
-
   }
 
-  createCombTable() {
-
-
+  createCombTable () {
     /*
         for (let combination of combinations2(+this.total, +this.nbpicks)) {
           console.log(combination);
@@ -49,11 +45,9 @@ export class CombTableComponent implements OnInit {
     this.combinations = generateCombinationsList(this.total, this.nbpicks)
 
     //console.log("comb ", this.combinations)
-
   }
 
-  getRowElem(selected: number[]): string[] {
-
+  getRowElem (selected: number[]): string[] {
     let row: string[] = new Array(this.total)
 
     for (let num of selected) {
@@ -62,13 +56,12 @@ export class CombTableComponent implements OnInit {
     return row
   }
 
-  classFromVal(val: string): string {
-    return val ? "fill" : ""
+  classFromVal (val: string): string {
+    return val ? 'fill' : ''
   }
 
-  getCombIndex(comb: number[], n: number, k: number): number {
-
-    return getOddsIndex(comb, n, k)
+  getCombIndex (comb: number[], n: number, k: number): number {
+    return getOddsIndex(comb, n, k, null)
     //return 0
   }
 }

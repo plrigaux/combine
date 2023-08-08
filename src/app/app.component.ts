@@ -19,8 +19,20 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  set_mega_millions () {
+    this.totalNbNumbers = 70
+    this.drawNbNumber = 5
+    this.power_ball = 25
+  }
+  set_lotto_max () {
+    this.totalNbNumbers = 50
+    this.drawNbNumber = 7
+    this.power_ball = 1
+  }
   //totalNbNumbers: any = 0
   _totalNbNumbers: number = 0
+  _power_ball: number = 1
+
   set totalNbNumbers (val: any) {
     this._totalNbNumbers = Number(val)
 
@@ -33,6 +45,14 @@ export class AppComponent implements OnInit {
 
   get totalNbNumbers () {
     return this._totalNbNumbers
+  }
+
+  set power_ball (val: any) {
+    this._power_ball = Number(val)
+  }
+
+  get power_ball () {
+    return this._power_ball
   }
 
   drawNbNumber: any = 0
@@ -49,7 +69,11 @@ export class AppComponent implements OnInit {
 
   private _odds: number = 0
   combination () {
-    this._odds = calculateOdds(this.totalNbNumbers, this.drawNbNumber)
+    this._odds = calculateOdds(
+      this.totalNbNumbers,
+      this.drawNbNumber,
+      this.power_ball
+    )
     return formatNumber(this._odds, this.locale)
   }
 
@@ -61,6 +85,7 @@ export class AppComponent implements OnInit {
     let comb = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
+      this.power_ball,
       this.oddsIndex
     )
 
@@ -152,7 +177,8 @@ export class AppComponent implements OnInit {
     this._oddsIndex = getOddsIndex(
       selectedSortedArray,
       this.totalNbNumbers,
-      this.drawNbNumber
+      this.drawNbNumber,
+      this.power_ball
     )
     //console.log(s, this.totalNbNumbers, this.drawNbNumber)
     this.saveData()
@@ -177,6 +203,7 @@ export class AppComponent implements OnInit {
     let comb = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
+      this.power_ball,
       this._oddsIndex
     )
     this._selected = new Set(comb)
@@ -190,6 +217,7 @@ export class AppComponent implements OnInit {
     let comb = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
+      this.power_ball,
       this._oddsIndex
     )
     this._selected = new Set(comb)
@@ -200,6 +228,11 @@ export class AppComponent implements OnInit {
   stepper (): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
     return setRange(0, this.totalNbNumbers - 1, this.step)
+  }
+
+  stepper_power_ball (): Iterable<number> {
+    //return new Stepper(this.totalNbNumbers - 1, this.step)
+    return setRange(0, this.power_ball - 1, this.step)
   }
 
   substepper (start: number): Iterable<number> {
@@ -301,11 +334,10 @@ export class AppComponent implements OnInit {
   myIndex (): number[] {
     const odds = calculateOdds(50, 7)
 
-    const vv = this.angleShowExMyTheThisn().map (v => {
-
+    const vv = this.angleShowExMyTheThisn().map(v => {
       return Math.round(v * odds)
-    } )
-   
+    })
+
     return vv
   }
 }
@@ -318,6 +350,10 @@ interface SaveData {
 }
 
 const setRange = (start: number, stop: number, step: number): number[] => {
+  if (stop == 0) {
+    return []
+  }
+
   return Array.from(
     { length: (stop - start) / step + 1 },
     (_, i) => start + i * step

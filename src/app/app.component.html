@@ -1,81 +1,121 @@
-<mat-card>
+<!--<mat-card>
   <mat-card-title>angle</mat-card-title>
-  <mat-card-subtitle>{{angleShow()}}</mat-card-subtitle>
-  <mat-card-subtitle>{{angleShow2()}}</mat-card-subtitle>
-  <p>
-    Bearing angle = {{angleShow3()}} deg {{angleShowRAD()}} rad
-  </p>
+  <mat-card-subtitle>{{ angleShow() }}</mat-card-subtitle>
+  <mat-card-subtitle>{{ angleShow2() }}</mat-card-subtitle>
+  <p>Bearing angle = {{ angleShow3() }} deg {{ angleShowRAD() }} rad</p>
 
-  <p>
-    ex Bearing angle = {{angleShowEx()}} deg 
-  </p>
-  <p>
-    ex Bearing angle my = {{angleShowExMy()}} deg 
-  </p>
-  <p>
-    ex Bearing angle my = {{angleShowExMy3()}} deg 
-  </p>
-  <p>
-    This is It  = {{angleShowExMyTheThisn()}} deg 
-  </p>
+  <p>ex Bearing angle = {{ angleShowEx() }} deg</p>
+  <p>ex Bearing angle my = {{ angleShowExMy() }} deg</p>
+  <p>ex Bearing angle my = {{ angleShowExMy3() }} deg</p>
+  <p>This is It = {{ angleShowExMyTheThisn() }} deg</p>
 
-  <p>
-    This is It  = {{myIndex()}} YES
-  </p>
+  <p>This is It = {{ myIndex() }} YES</p>
 </mat-card>
-
+-->
 <mat-card>
-  <mat-card-title>Actions Buttons</mat-card-title>
-  <mat-card-subtitle>Start</mat-card-subtitle>
+  <mat-card-header>
+    <mat-card-title>Actions Buttons</mat-card-title>
+    <mat-card-subtitle>Start</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Total</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="totalNbNumbers"
+        (focusout)="saveData()"
+      />
+    </mat-form-field>
 
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Balls</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="drawNbNumber"
+        (focusout)="saveData()"
+      />
+    </mat-form-field>
 
-  <mat-form-field class="example-form-field" appearance="fill">
-    <mat-label>Total</mat-label>
-    <input matInput type="number" [(ngModel)]="totalNbNumbers" (focusout)="saveData()">
-  </mat-form-field>
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Power ball</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="power_ball"
+        (focusout)="saveData()"
+      />
+    </mat-form-field>
 
+    <button mat-button (click)="set_lotto_max()">Set Lotto Max</button>
+    <button mat-button (click)="set_mega_millions()">Mega Million</button>
+    <p>Odds {{ combination() }}</p>
 
-  <mat-form-field class="example-form-field" appearance="fill">
-    <mat-label>Balls</mat-label>
-    <input matInput type="number" [(ngModel)]="drawNbNumber" (focusout)="saveData()">
-  </mat-form-field>
-
-  <p>
-    Odds {{combination()}}
-  </p>
-
-  <mat-form-field class="example-form-field" appearance="fill">
-    <mat-label>Index</mat-label>
-    <input matInput type="number" [(ngModel)]="oddsIndex" (change)="onCombIndexChange($event)" (focusout)="saveData()">
-  </mat-form-field>
-  <button mat-button (click)="random()">Random</button>
-  <p>
-    <span *ngFor="let draw of combinationOutput" class="numberCircle drawed">{{draw}}</span>
-  </p>
-
+    <mat-form-field class="example-form-field" appearance="fill">
+      <mat-label>Index</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="oddsIndex"
+        (change)="onCombIndexChange($event)"
+        (focusout)="saveData()"
+      />
+    </mat-form-field>
+    <button mat-button (click)="random()">Random</button>
+    <p>
+      <span
+        *ngFor="let draw of combinationOutput"
+        class="numberCircle drawed"
+        >{{ draw }}</span
+      >
+    </p>
+  </mat-card-content>
 </mat-card>
 <mat-card>
   <mat-card-title>Get the oddsIndex</mat-card-title>
 
-  <p>
-    Odds index {{showOddIndex()}}
-  </p>
+  <p>Odds index {{ showOddIndex() }}</p>
 
-  <button mat-button [disabled]="previousDisable()" (click)="previous()">Previous</button>
+  <button mat-button [disabled]="previousDisable()" (click)="previous()">
+    Previous
+  </button>
   <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
 
   <div *ngFor="let step of stepper()">
-    <span *ngFor="let ball of substepper(step)" class="numberCircle" [ngClass]="drawed(ball)"
-      (click)="clickBall(ball)">{{ball}}</span>
-
+    <span
+      *ngFor="let ball of substepper(step)"
+      class="numberCircle"
+      [ngClass]="drawed(ball)"
+      (click)="clickBall(ball)"
+      >{{ ball }}</span
+    >
   </div>
 
+  <div *ngFor="let step of stepper()">
+    <span
+      *ngFor="let ball of substepper(step)"
+      class="numberCircle"
+      [ngClass]="drawed(ball)"
+      (click)="clickBall(ball)"
+      >{{ ball }}</span
+    >
+  </div>
+  <p>Power Ball</p>
+  <div *ngFor="let step of stepper_power_ball()">
+    <span
+      *ngFor="let ball of substepper(step)"
+      class="numberCircle"
+      [ngClass]="drawed(ball)"
+      (click)="clickBall(ball)"
+      >{{ ball }}</span
+    >
+  </div>
 </mat-card>
-<br>
+<br />
 
-<app-comb-table total="7" nbpicks="3"></app-comb-table>
-
-<app-comb-table total="6" nbpicks="2"></app-comb-table>
 <!--
+<app-comb-table total="7" nbpicks="3"></app-comb-table>
+<app-comb-table total="6" nbpicks="2"></app-comb-table>
       <app-comb-table total="6" nbpicks="3"></app-comb-table>
 -->
