@@ -82,14 +82,14 @@ export class AppComponent implements OnInit {
       this.combinationOutput = []
     }
 
-    let comb = getCombinationfromIndex(
+    let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
       this.power_ball,
       this.oddsIndex
     )
 
-    this.combinationOutput = comb
+    this.combinationOutput = results.main_pool
 
     this.saveData()
   }
@@ -100,7 +100,8 @@ export class AppComponent implements OnInit {
 
   random () {
     this.oddsIndex = Math.floor(
-      Math.random() * calculateOdds(this.totalNbNumbers, this.drawNbNumber)
+      Math.random() *
+        calculateOdds(this.totalNbNumbers, this.drawNbNumber, this.power_ball)
     )
 
     this.combbase_on_index()
@@ -200,13 +201,13 @@ export class AppComponent implements OnInit {
     }
 
     this._oddsIndex--
-    let comb = getCombinationfromIndex(
+    let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
       this.power_ball,
       this._oddsIndex
     )
-    this._selected = new Set(comb)
+    this._selected = new Set(results.main_pool)
   }
 
   next () {
@@ -214,13 +215,14 @@ export class AppComponent implements OnInit {
       return
     }
     this._oddsIndex++
-    let comb = getCombinationfromIndex(
+    let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
       this.power_ball,
       this._oddsIndex
     )
-    this._selected = new Set(comb)
+
+    this._selected = new Set(results.main_pool)
   }
 
   private step = 10
@@ -332,7 +334,7 @@ export class AppComponent implements OnInit {
   }
 
   myIndex (): number[] {
-    const odds = calculateOdds(50, 7)
+    const odds = calculateOdds(50, 7, 1)
 
     const vv = this.angleShowExMyTheThisn().map(v => {
       return Math.round(v * odds)

@@ -78,7 +78,7 @@ export function getOddsIndex (
   combination: number[],
   n: number,
   k: number,
-  power_ball: number | null
+  power_ball: number
 ): number {
   return getCombinationIndex(combination, n, k, power_ball, 0, 0)
 }
@@ -87,7 +87,7 @@ function getCombinationIndex (
   combination: number[],
   n: number,
   k: number,
-  power_ball: number | null,
+  power_ball: number,
   prev: number,
   idx: number
 ): number {
@@ -154,18 +154,21 @@ function getCombIndex1 (
 export function calculateOdds (
   n: number,
   k: number,
-  power_ball: number | null = null
+  power_ball: number = 1
 ): number {
   let num = factorialFrom(n, n - k + 1)
   let den = factorial(k)
 
   let val = num / den
 
-  if (!power_ball) {
-    power_ball = 1
-  }
-
   return val * power_ball
+}
+
+export class Result {
+  main_pool: number[] = []
+  power_ball: number = 1
+
+  constructor (n: number, k: number, power_ball: number) {}
 }
 
 export function getCombinationfromIndex (
@@ -173,47 +176,78 @@ export function getCombinationfromIndex (
   k: number,
   power_ball: number,
   index: number
-): number[] {
+): Result {
   let odds = calculateOdds(n, k, power_ball)
 
   if (index > odds) {
     console.warn('getCombinationfromIndex index > odds', index, odds)
-    return []
+    return new Result(n, k, power_ball)
   }
 
   console.log('combinations', odds, index)
-  let result: number[] = []
-  _getCombinationfromIndex(n, k, power_ball, index, 0, result, 1)
+  let result: Result = new Result(n, k, power_ball)
+
+  const [ajusted_index, power_ball_result] = calculate_ajusted_index(
+    n,
+    k,
+    power_ball,
+    index
+  )
+
+  _getCombinationfromIndex(n, k, power_ball, ajusted_index, 0, result, 1)
+
+  result.power_ball = power_ball_result
+
+  console.log('combinations results', result)
 
   return result
+}
+
+function calculate_ajusted_index (
+  n: number,
+  k: number,
+  power_ball: number,
+  index: number
+): [number, number] {
+  let main_pool_odds = calculateOdds(n, k, 1)
+
+  power_ball = 1
+  while (index > main_pool_odds) {
+    index -= main_pool_odds
+    power_ball += 1
+  }
+
+  return [index, power_ball]
 }
 
 function _getCombinationfromIndex (
   n: number,
   k: number,
   power_ball: number,
-  id: number,
+  index: number,
   base: number,
-  result: number[],
+  result: Result,
   level: number
 ) {
   if (k == 1) {
     //console.warn("n", n - 1, r - 1, base, id)
-    result.push(id - base + level - 1)
+    result.main_pool.push(index - base + level - 1)
     return
   }
 
-  let combof_below: number = calculateOdds(n - 1, k - 1, power_ball)
+  let combof_below_no_power_ball: number = calculateOdds(n - 1, k - 1)
+  //const combof_below: number = calculateOdds(n - 1, k - 1, power_ball)
+
   //console.log("base", base, "c", combof_below, "id", id, "n", n, "r", r, "lvl", level, result)
 
-  if (id <= combof_below + base) {
-    result.push(level)
+  if (index <= combof_below_no_power_ball + base) {
+    result.main_pool.push(level)
     //console.log("lower")
     _getCombinationfromIndex(
       n - 1,
       k - 1,
       power_ball,
-      id,
+      index,
       base,
       result,
       level + 1
@@ -224,8 +258,8 @@ function _getCombinationfromIndex (
       n - 1,
       k,
       power_ball,
-      id,
-      base + combof_below,
+      index,
+      base + combof_below_no_power_ball,
       result,
       level + 1
     )

@@ -61,7 +61,7 @@ export class CombTableComponent implements OnInit {
   }
 
   getCombIndex (comb: number[], n: number, k: number): number {
-    return getOddsIndex(comb, n, k, null)
+    return getOddsIndex(comb, n, k, 1)
     //return 0
   }
 }
