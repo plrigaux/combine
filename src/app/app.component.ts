@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
 
   drawNbNumber: any = 0
   oddsIndex: any = 0
+  nomalized_index: number = 0
   combinationOutput: Result = new Result(1, 1, 1)
 
   constructor (@Inject(LOCALE_ID) public locale: string) {}
@@ -117,7 +118,8 @@ export class AppComponent implements OnInit {
       total: this.totalNbNumbers,
       draw: this.drawNbNumber,
       combIndex: this.oddsIndex,
-      selected: [...this._selected]
+      selected: [...this._selected],
+      norm_comb_index: this.oddsIndex % this._odds
     }
 
     let str = JSON.stringify(obj)
@@ -134,6 +136,7 @@ export class AppComponent implements OnInit {
       this.totalNbNumbers = parsed.total
       this.drawNbNumber = parsed.draw
       this._selected = new Set(parsed.selected)
+      this.nomalized_index = parsed.norm_comb_index
     }
   }
 
@@ -383,6 +386,7 @@ interface SaveData {
   draw: number
   combIndex: number
   selected: number[]
+  norm_comb_index: number
 }
 
 const setRange = (start: number, stop: number, step: number): number[] => {

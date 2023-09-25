@@ -181,7 +181,8 @@ export function getCombinationfromIndex (
 
   if (index > odds) {
     console.warn('getCombinationfromIndex index > odds', index, odds)
-    return new Result(n, k, power_ball)
+    index = index % odds
+    //return new Result(n, k, power_ball)
   }
 
   console.log('combinations', odds, index)
