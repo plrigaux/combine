@@ -70,6 +70,19 @@ export class AppComponent implements OnInit {
   }
 
   private _odds: number = 0
+
+  getOdds (): number {
+    if (!this._odds) {
+      this._odds = calculateOdds(
+        this.totalNbNumbers,
+        this.drawNbNumber,
+        this.power_ball_pool_size
+      )
+    }
+
+    return this._odds
+  }
+
   combination () {
     this._odds = calculateOdds(
       this.totalNbNumbers,
@@ -84,11 +97,13 @@ export class AppComponent implements OnInit {
       this.combinationOutput = new Result(1, 1, 1)
     }
 
+    this.nomalized_index = this.oddsIndex % this.getOdds()
+
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
       this.power_ball_pool_size,
-      this.oddsIndex
+      this.nomalized_index
     )
 
     this.combinationOutput = results
@@ -119,7 +134,7 @@ export class AppComponent implements OnInit {
       draw: this.drawNbNumber,
       combIndex: this.oddsIndex,
       selected: [...this._selected],
-      norm_comb_index: this.oddsIndex % this._odds
+      norm_comb_index: this.nomalized_index
     }
 
     let str = JSON.stringify(obj)
