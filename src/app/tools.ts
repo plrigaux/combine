@@ -1,11 +1,11 @@
-function factorial (num: number) {
+function factorial(num: number) {
   let rval = 1
   for (let i = 2; i <= num; i++) rval = rval * i
 
   return rval
 }
 
-function factorialFrom (num: number, start: number) {
+function factorialFrom(num: number, start: number) {
   let rval = 1
 
   for (let i = start; i <= num; i++) {
@@ -15,7 +15,7 @@ function factorialFrom (num: number, start: number) {
   return rval
 }
 
-function* combinationsList (n: number, k: number): IterableIterator<number[]> {
+function* combinationsList(n: number, k: number): IterableIterator<number[]> {
   if (k < 1) {
     yield []
   } else {
@@ -28,7 +28,7 @@ function* combinationsList (n: number, k: number): IterableIterator<number[]> {
   }
 }
 
-export function generateCombinationsList (n: number, k: number): number[][] {
+export function generateCombinationsList(n: number, k: number): number[][] {
   let results: number[][] = []
   let result: number[] = new Array(k)
 
@@ -36,7 +36,7 @@ export function generateCombinationsList (n: number, k: number): number[][] {
   return results
 }
 
-function combinationsList2x (
+function combinationsList2x(
   n: number,
   len: number,
   startPosition: number,
@@ -49,23 +49,23 @@ function combinationsList2x (
     return
   }
 
-  for (let i = startPosition; i <= n - len; ) {
+  for (let i = startPosition; i <= n - len;) {
     i++
     result[result.length - len] = i
     combinationsList2x(n, len - 1, i, result, allResuls)
   }
 }
 
-function getMaxes (n: number, k: number): number[] {
+function getMaxes(n: number, k: number): number[] {
   let maxes: number[] = []
 
-  for (let i = n - k; i < n; ) {
+  for (let i = n - k; i < n;) {
     maxes.push(++i)
   }
   return maxes
 }
 
-function getAllNum (n: number, k: number): number[] {
+function getAllNum(n: number, k: number): number[] {
   let maxes: number[] = []
 
   for (let i = 1; i <= n; i++) {
@@ -74,7 +74,7 @@ function getAllNum (n: number, k: number): number[] {
   return maxes
 }
 
-export function getOddsIndex (
+export function getOddsIndex(
   combination: number[],
   n: number,
   k: number,
@@ -83,7 +83,7 @@ export function getOddsIndex (
   return getCombinationIndex(combination, n, k, power_ball, 0, 0)
 }
 
-function getCombinationIndex (
+function getCombinationIndex(
   combination: number[],
   n: number,
   k: number,
@@ -116,7 +116,7 @@ function getCombinationIndex (
   return index
 }
 
-function getCombIndex1 (
+function getCombIndex1(
   comb: number[],
   n: number,
   k: number,
@@ -151,7 +151,7 @@ function getCombIndex1 (
   return index
 }
 
-export function calculateOdds (
+export function calculateOdds(
   n: number,
   k: number,
   power_ball: number = 1
@@ -168,16 +168,16 @@ export class Result {
   main_pool: number[] = []
   power_ball: number = 1
 
-  constructor (n: number, k: number, power_ball: number) {}
+  constructor(n: number, k: number, power_ball: number) { }
 }
 
-export function getCombinationfromIndex (
+export function getCombinationfromIndex(
   n: number,
   k: number,
   power_ball: number,
   index: number
 ): Result {
-  let odds = calculateOdds(n, k, power_ball)
+  const odds = calculateOdds(n, k, power_ball)
 
   if (index > odds) {
     console.warn('getCombinationfromIndex index > odds', index, odds)
@@ -188,23 +188,31 @@ export function getCombinationfromIndex (
   console.log('combinations', odds, index)
   let result: Result = new Result(n, k, power_ball)
 
+  const odds_no_gold = calculateOdds(n, k, 1)
+
+  const norm_index = index - 1
+  const index_no_gold = Math.floor(norm_index / power_ball) +1
+  const power_ball_result = norm_index % power_ball
+
+  console.log('power_ball', power_ball, "index_no_gold", index_no_gold, "power_ball_result", power_ball_result)
+  /*
   const [ajusted_index, power_ball_result] = calculate_ajusted_index(
     n,
     k,
     power_ball,
     index
   )
+*/
+  _getCombinationfromIndex(n, k, index_no_gold, 0, result, 1)
 
-  _getCombinationfromIndex(n, k, power_ball, ajusted_index, 0, result, 1)
-
-  result.power_ball = power_ball_result
+  result.power_ball = power_ball_result + 1
 
   console.log('combinations results', result)
 
   return result
 }
 
-function calculate_ajusted_index (
+function calculate_ajusted_index(
   n: number,
   k: number,
   power_ball: number,
@@ -221,10 +229,9 @@ function calculate_ajusted_index (
   return [index, power_ball]
 }
 
-function _getCombinationfromIndex (
+function _getCombinationfromIndex(
   n: number,
   k: number,
-  power_ball: number,
   index: number,
   base: number,
   result: Result,
@@ -247,7 +254,6 @@ function _getCombinationfromIndex (
     _getCombinationfromIndex(
       n - 1,
       k - 1,
-      power_ball,
       index,
       base,
       result,
@@ -258,7 +264,6 @@ function _getCombinationfromIndex (
     _getCombinationfromIndex(
       n - 1,
       k,
-      power_ball,
       index,
       base + combof_below_no_power_ball,
       result,
@@ -267,7 +272,7 @@ function _getCombinationfromIndex (
   }
 }
 
-export function angle (): number {
+export function angle(): number {
   const lat1 = 45.45601525767227
   const long1 = -73.54996188669251
 
@@ -287,7 +292,7 @@ export interface Coordinate {
   long: number
 }
 
-export function angle3 (): number {
+export function angle3(): number {
   const p1: Coordinate = {
     lat: 45.45601525767227,
     long: -73.54996188669251
@@ -301,7 +306,7 @@ export function angle3 (): number {
   return calculate(p1, p2)
 }
 
-export function angle3DEG (): number {
+export function angle3DEG(): number {
   const angRad = angle3()
 
   return angRad * (180 / Math.PI)
@@ -360,7 +365,7 @@ export const toDegrees = (val: number): number => {
   return (val * 180) / Math.PI
 }
 
-export function angle2 (): number {
+export function angle2(): number {
   const φ1 = 45.45601525767227
   const λ1 = -73.54996188669251
 
@@ -375,3 +380,5 @@ export function angle2 (): number {
   const brng = ((θ * 180) / Math.PI + 360) % 360 // in degrees
   return brng
 }
+
+

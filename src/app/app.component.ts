@@ -107,6 +107,9 @@ export class AppComponent implements OnInit {
     }
 
     this.nomalized_index = this.oddsIndex % this.getOdds()
+    if (this.nomalized_index === 0) {
+      this.nomalized_index = this.getOdds()
+    }
 
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
