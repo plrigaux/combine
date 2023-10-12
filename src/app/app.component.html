@@ -47,11 +47,11 @@
         (focusout)="saveData()"
       />
     </mat-form-field>
-
-    <button mat-button (click)="set_lotto_max()">Set Lotto Max</button>
-    <button mat-button (click)="set_mega_millions()">Mega Million</button>
-    <button mat-button (click)="set_power_ball()">Power Ball</button>
-
+    <div>
+      <button mat-button (click)="set_lotto_max()">Set Lotto Max</button>
+      <button mat-button (click)="set_mega_millions()">Mega Million</button>
+      <button mat-button (click)="set_power_ball()">Power Ball</button>
+    </div>
     <p>Odds {{ combination() }}</p>
 
     <mat-form-field class="example-form-field" appearance="fill">
@@ -84,6 +84,10 @@
   </mat-card-content>
 </mat-card>
 <mat-card>
+  <p>
+      <mat-button-toggle value="link">
+        <mat-icon>link</mat-icon> Link</mat-button-toggle>
+  </p>
   <mat-card-title>Get the oddsIndex</mat-card-title>
 
   <p>Odds index {{ showOddIndex() }}</p>

@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input'
 import { CombTableComponent } from './comb-table/comb-table.component'
 import { MatCardModule } from '@angular/material/card'
 import { FormsModule } from '@angular/forms'
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 
 @NgModule({
   declarations: [AppComponent, CombTableComponent],
@@ -24,9 +26,10 @@ import { FormsModule } from '@angular/forms'
     MatDividerModule,
     MatInputModule,
     MatCardModule,
-    FormsModule
+    FormsModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

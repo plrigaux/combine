@@ -64,6 +64,7 @@ export class AppComponent implements OnInit {
     return this._power_ball
   }
 
+  link: boolean = false
   drawNbNumber: any = 0
   oddsIndex: any = 0
   nomalized_index: number = 0
@@ -74,7 +75,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.loadData()
 
-    this.combbase_on_index()
+    this.combbase_on_index(1)
   }
 
   private _odds: number = 0
@@ -100,13 +101,16 @@ export class AppComponent implements OnInit {
     return formatNumber(this._odds, this.locale)
   }
 
-  combbase_on_index() {
-    if (!this.oddsIndex || this.oddsIndex <= 1) {
-      this.combinationOutput = new Result(1, 1, 1)
-      this.oddsIndex = 1
+  combbase_on_index(oddsIndex: number) {
+
+    if (!oddsIndex || oddsIndex <= 1) {
+      //this.combinationOutput = new Result(1, 1, 1)
+      oddsIndex = 1
     }
 
+    this.oddsIndex = oddsIndex
     this.nomalized_index = this.oddsIndex % this.getOdds()
+
     if (this.nomalized_index === 0) {
       this.nomalized_index = this.getOdds()
     }
@@ -120,15 +124,19 @@ export class AppComponent implements OnInit {
 
     this.combinationOutput = results
 
+    if (this.link) {
+      this._oddsIndex = this.oddsIndex
+    }
+
     this.saveData()
   }
 
   onCombIndexChange($event: any) {
-    this.combbase_on_index()
+    this.combbase_on_index(this.oddsIndex)
   }
 
   random() {
-    this.oddsIndex = Math.floor(
+    const oddsIndex = Math.floor(
       Math.random() *
       calculateOdds(
         this.totalNbNumbers,
@@ -137,7 +145,7 @@ export class AppComponent implements OnInit {
       )
     )
 
-    this.combbase_on_index()
+    this.combbase_on_index(oddsIndex)
   }
 
   saveData() {
@@ -201,10 +209,14 @@ export class AppComponent implements OnInit {
         }, 3000)
       }
     }
+
+    this.updateSelectorIndex()
   }
 
   clickBall_power_ball(ball: number) {
     this.set_gold_ball(ball)
+
+    this.updateSelectorIndex()
   }
 
   set_gold_ball(ball: number) {
@@ -230,9 +242,9 @@ export class AppComponent implements OnInit {
     return this._selected.size == this.drawNbNumber && this._selected_power_ball.size == 1
   }
 
-  showOddIndex(): string {
+  updateSelectorIndex() {
     if (!this._isAllNumberdrawed()) {
-      return ''
+      return
     }
 
     let selectedSortedArray: number[] = [...this._selected].sort(
@@ -248,8 +260,14 @@ export class AppComponent implements OnInit {
       this.drawNbNumber,
       this.power_ball_pool_size
     )
-    //console.log(s, this.totalNbNumbers, this.drawNbNumber)
+
     this.saveData()
+  }
+
+  showOddIndex(): string {
+    if (!this._isAllNumberdrawed()) {
+      return ''
+    }
 
     return formatNumber(this._oddsIndex, this.locale)
   }
@@ -307,6 +325,7 @@ export class AppComponent implements OnInit {
     return setRange(0, this.totalNbNumbers - 1, this.step)
   }
 
+
   stepper_power_ball(): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
     return setRange(0, this.power_ball_pool_size - 1, this.step)
@@ -324,105 +343,106 @@ export class AppComponent implements OnInit {
     return setRange(start + 1, limit, 1)
   }
 
-  angleShow(): number {
-    return angle()
-  }
-
-  angleShow2(): number {
-    return angle2()
-  }
-
-  angleShow3(): number {
-    return angle3DEG()
-  }
-
-  angleShowRAD(): number {
-    return angle3()
-  }
-
-  angleShowEx(): number {
-    const p1: Coordinate = {
-      lat: 39.099912,
-      long: -94.581213
+  /*
+    angleShow(): number {
+      return angle()
     }
-
-    const p2: Coordinate = {
-      lat: 38.627089,
-      long: -90.200203
+  
+    angleShow2(): number {
+      return angle2()
     }
-
-    const angle = calculate(p1, p2)
-    return toDegrees(angle)
-  }
-
-  angleShowExMy(): number {
-    const p1: Coordinate = {
-      lat: 45.45601525767227,
-      long: -73.54996188669251
+  
+    angleShow3(): number {
+      return angle3DEG()
     }
-
-    const p2: Coordinate = {
-      lat: 40.7335166835945,
-      long: -74.00306387532882
+  
+    angleShowRAD(): number {
+      return angle3()
     }
-
-    const angle = calculate(p1, p2)
-    return toDegrees(angle)
-  }
-
-  angleShowExMy3(): number[] {
-    const p1: Coordinate = {
-      lat: 45.45601525767227,
-      long: -73.54996188669251
+  
+    angleShowEx(): number {
+      const p1: Coordinate = {
+        lat: 39.099912,
+        long: -94.581213
+      }
+  
+      const p2: Coordinate = {
+        lat: 38.627089,
+        long: -90.200203
+      }
+  
+      const angle = calculate(p1, p2)
+      return toDegrees(angle)
     }
-
-    const p2: Coordinate = {
-      lat: 40.7335166835945,
-      long: -74.00306387532882
+  
+    angleShowExMy(): number {
+      const p1: Coordinate = {
+        lat: 45.45601525767227,
+        long: -73.54996188669251
+      }
+  
+      const p2: Coordinate = {
+        lat: 40.7335166835945,
+        long: -74.00306387532882
+      }
+  
+      const angle = calculate(p1, p2)
+      return toDegrees(angle)
     }
-
-    const angle = calculate(p1, p2)
-    const val1 = -toDegrees(angle)
-    const val2 = toDegrees(angle)
-    //return - toDegrees(angle) + 90
-    return [val1, -toDegrees(angle + Math.PI / 4), val2]
-  }
-
-  angleShowExMyTheThisn(): number[] {
-    const p1: Coordinate = {
-      lat: 45.45601525767227,
-      long: -73.54996188669251
+  
+    angleShowExMy3(): number[] {
+      const p1: Coordinate = {
+        lat: 45.45601525767227,
+        long: -73.54996188669251
+      }
+  
+      const p2: Coordinate = {
+        lat: 40.7335166835945,
+        long: -74.00306387532882
+      }
+  
+      const angle = calculate(p1, p2)
+      const val1 = -toDegrees(angle)
+      const val2 = toDegrees(angle)
+      //return - toDegrees(angle) + 90
+      return [val1, -toDegrees(angle + Math.PI / 4), val2]
     }
-
-    const p2: Coordinate = {
-      lat: 40.7335166835945,
-      long: -74.00306387532882
+  
+    angleShowExMyTheThisn(): number[] {
+      const p1: Coordinate = {
+        lat: 45.45601525767227,
+        long: -73.54996188669251
+      }
+  
+      const p2: Coordinate = {
+        lat: 40.7335166835945,
+        long: -74.00306387532882
+      }
+  
+      const angle = calculate(p1, p2)
+      //return (- angle + Math.PI / 2) / (2 * Math.PI)
+      //return ((- angle / (2 * Math.PI)) + 0.25)
+      const val1 = -toDegrees(angle)
+      const val12 = -toDegrees(angle + Math.PI / 4)
+      const val2 = toDegrees(angle)
+  
+      //return [val1, -toDegrees(angle + Math.PI / 4), val2]
+  
+      const v1 = -angle / (2 * Math.PI)
+      const v2 = -angle / (2 * Math.PI) + 0.25
+      const v3 = 2 * Math.PI + angle / (2 * Math.PI)
+      return [v1, v2, v3]
     }
-
-    const angle = calculate(p1, p2)
-    //return (- angle + Math.PI / 2) / (2 * Math.PI)
-    //return ((- angle / (2 * Math.PI)) + 0.25)
-    const val1 = -toDegrees(angle)
-    const val12 = -toDegrees(angle + Math.PI / 4)
-    const val2 = toDegrees(angle)
-
-    //return [val1, -toDegrees(angle + Math.PI / 4), val2]
-
-    const v1 = -angle / (2 * Math.PI)
-    const v2 = -angle / (2 * Math.PI) + 0.25
-    const v3 = 2 * Math.PI + angle / (2 * Math.PI)
-    return [v1, v2, v3]
-  }
-
-  myIndex(): number[] {
-    const odds = calculateOdds(50, 7, 1)
-
-    const vv = this.angleShowExMyTheThisn().map(v => {
-      return Math.round(v * odds)
-    })
-
-    return vv
-  }
+  
+    myIndex(): number[] {
+      const odds = calculateOdds(50, 7, 1)
+  
+      const vv = this.angleShowExMyTheThisn().map(v => {
+        return Math.round(v * odds)
+      })
+  
+      return vv
+    }*/
 }
 
 interface SaveData {
