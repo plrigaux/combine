@@ -105,6 +105,15 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "https://plrigaux.github.io/combine/",
+            "name": "Combine",
+            "email": "plr@noreply.com",
+            "noSilent": true
+          }
         }
       }
     }
