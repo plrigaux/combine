@@ -25,11 +25,19 @@ export class AppComponent implements OnInit {
     this.drawNbNumber = 5
     this.power_ball_pool_size = 25
   }
+
+  set_power_ball () {
+    this.totalNbNumbers = 69
+    this.drawNbNumber = 5
+    this.power_ball_pool_size = 26
+  }
+
   set_lotto_max () {
     this.totalNbNumbers = 50
     this.drawNbNumber = 7
     this.power_ball_pool_size = 1
   }
+
   //totalNbNumbers: any = 0
   _totalNbNumbers: number = 0
   _power_ball: number = 1
@@ -134,7 +142,8 @@ export class AppComponent implements OnInit {
       draw: this.drawNbNumber,
       combIndex: this.oddsIndex,
       selected: [...this._selected],
-      norm_comb_index: this.nomalized_index
+      norm_comb_index: this.nomalized_index,
+      gold_ball_pool_size: this.power_ball_pool_size
     }
 
     let str = JSON.stringify(obj)
@@ -152,6 +161,7 @@ export class AppComponent implements OnInit {
       this.drawNbNumber = parsed.draw
       this._selected = new Set(parsed.selected)
       this.nomalized_index = parsed.norm_comb_index
+      this.power_ball_pool_size = parsed.gold_ball_pool_size
     }
   }
 
@@ -402,6 +412,7 @@ interface SaveData {
   combIndex: number
   selected: number[]
   norm_comb_index: number
+  gold_ball_pool_size : number
 }
 
 const setRange = (start: number, stop: number, step: number): number[] => {

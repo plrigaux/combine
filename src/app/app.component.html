@@ -50,6 +50,8 @@
 
     <button mat-button (click)="set_lotto_max()">Set Lotto Max</button>
     <button mat-button (click)="set_mega_millions()">Mega Million</button>
+    <button mat-button (click)="set_power_ball()">Power Ball</button>
+
     <p>Odds {{ combination() }}</p>
 
     <mat-form-field class="example-form-field" appearance="fill">
@@ -86,11 +88,12 @@
 
   <p>Odds index {{ showOddIndex() }}</p>
 
+  <div>
   <button mat-button [disabled]="previousDisable()" (click)="previous()">
     Previous
   </button>
   <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
-
+</div>
   <div *ngFor="let step of stepper()">
     <span
       *ngFor="let ball of substepper(step)"
