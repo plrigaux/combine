@@ -146,6 +146,7 @@ export class AppComponent implements OnInit {
       draw: this.drawNbNumber,
       combIndex: this.oddsIndex,
       selected: [...this._selected],
+      selected_gold_ball: this.get_selected_gold_ball(),
       norm_comb_index: this.nomalized_index,
       gold_ball_pool_size: this.power_ball_pool_size
     }
@@ -164,6 +165,7 @@ export class AppComponent implements OnInit {
       this.totalNbNumbers = parsed.total
       this.drawNbNumber = parsed.draw
       this._selected = new Set(parsed.selected)
+      this.set_gold_ball(parsed.selected_gold_ball)
       this.nomalized_index = parsed.norm_comb_index
       this.power_ball_pool_size = parsed.gold_ball_pool_size
     }
@@ -202,11 +204,12 @@ export class AppComponent implements OnInit {
   }
 
   clickBall_power_ball(ball: number) {
-    if (!this._selected_power_ball.delete(ball)) {
-      if (this._selected_power_ball.size < 1) {
-        this._selected_power_ball.add(ball)
-      }
-    }
+    this.set_gold_ball(ball)
+  }
+
+  set_gold_ball(ball: number) {
+    this._selected_power_ball.clear()
+    this._selected_power_ball.add(ball)
   }
 
   drawed(ball: number): string {
@@ -224,7 +227,7 @@ export class AppComponent implements OnInit {
   private _oddsIndex: number = 0
 
   private _isAllNumberdrawed(): boolean {
-    return this._selected.size == this.drawNbNumber
+    return this._selected.size == this.drawNbNumber && this._selected_power_ball.size == 1
   }
 
   showOddIndex(): string {
@@ -235,8 +238,12 @@ export class AppComponent implements OnInit {
     let selectedSortedArray: number[] = [...this._selected].sort(
       (a, b) => a - b
     )
+
+    const gold_ball = this.get_selected_gold_ball()
+    console.log("gold_ball", gold_ball)
     this._oddsIndex = getOddsIndex(
       selectedSortedArray,
+      gold_ball,
       this.totalNbNumbers,
       this.drawNbNumber,
       this.power_ball_pool_size
@@ -245,6 +252,10 @@ export class AppComponent implements OnInit {
     this.saveData()
 
     return formatNumber(this._oddsIndex, this.locale)
+  }
+
+  get_selected_gold_ball(): number {
+    return [...this._selected_power_ball][0] || 1
   }
 
   previousDisable(): boolean {
@@ -261,20 +272,21 @@ export class AppComponent implements OnInit {
     }
 
     this._oddsIndex--
-    let results = getCombinationfromIndex(
-      this.totalNbNumbers,
-      this.drawNbNumber,
-      this.power_ball_pool_size,
-      this._oddsIndex
-    )
-    this._selected = new Set(results.main_pool)
+
+    this._update_selection()
   }
 
   next() {
-    if (this._oddsIndex >= this._odds) {
+    if (this._oddsIndex >= this.getOdds()) {
       return
     }
+
     this._oddsIndex++
+
+    this._update_selection()
+  }
+
+  private _update_selection() {
     let results = getCombinationfromIndex(
       this.totalNbNumbers,
       this.drawNbNumber,
@@ -282,7 +294,10 @@ export class AppComponent implements OnInit {
       this._oddsIndex
     )
 
+    console.log("before", this._selected, this._selected_power_ball)
     this._selected = new Set(results.main_pool)
+    this.set_gold_ball(results.power_ball)
+    console.log("after", this._selected, this._selected_power_ball)
   }
 
   private step = 10
@@ -415,6 +430,7 @@ interface SaveData {
   draw: number
   combIndex: number
   selected: number[]
+  selected_gold_ball: number
   norm_comb_index: number
   gold_ball_pool_size: number
 }

@@ -76,21 +76,24 @@ function getAllNum(n: number, k: number): number[] {
 
 export function getOddsIndex(
   combination: number[],
+  selected_gold_ball: number,
   n: number,
   k: number,
-  power_ball: number
+  power_ball_pool: number
 ): number {
-  return getCombinationIndex(combination, n, k, power_ball, 0, 0)
+  let main_index = getCombinationIndex(combination, n, k, 0, 0)
+  main_index = ((main_index - 1) * power_ball_pool) + selected_gold_ball
+  return main_index
 }
 
 function getCombinationIndex(
   combination: number[],
   n: number,
   k: number,
-  power_ball: number,
   prev: number,
   idx: number
 ): number {
+
   if (idx >= combination.length) {
     return 1
   }
@@ -101,14 +104,13 @@ function getCombinationIndex(
 
   let index = 0
   for (let i = n - ball + 1; i < n; i++) {
-    index += calculateOdds(i, nextK, power_ball)
+    index += calculateOdds(i, nextK, 1)
   }
 
   index += getCombinationIndex(
     combination,
     n - ball,
     nextK,
-    power_ball,
     original_ball,
     idx + 1
   )
@@ -191,7 +193,7 @@ export function getCombinationfromIndex(
   const odds_no_gold = calculateOdds(n, k, 1)
 
   const norm_index = index - 1
-  const index_no_gold = Math.floor(norm_index / power_ball) +1
+  const index_no_gold = Math.floor(norm_index / power_ball) + 1
   const power_ball_result = norm_index % power_ball
 
   console.log('power_ball', power_ball, "index_no_gold", index_no_gold, "power_ball_result", power_ball_result)
