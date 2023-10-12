@@ -20,19 +20,19 @@ import {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  set_mega_millions () {
+  set_mega_millions() {
     this.totalNbNumbers = 70
     this.drawNbNumber = 5
     this.power_ball_pool_size = 25
   }
 
-  set_power_ball () {
+  set_power_ball() {
     this.totalNbNumbers = 69
     this.drawNbNumber = 5
     this.power_ball_pool_size = 26
   }
 
-  set_lotto_max () {
+  set_lotto_max() {
     this.totalNbNumbers = 50
     this.drawNbNumber = 7
     this.power_ball_pool_size = 1
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   _totalNbNumbers: number = 0
   _power_ball: number = 1
 
-  set totalNbNumbers (val: any) {
+  set totalNbNumbers(val: any) {
     this._totalNbNumbers = Number(val)
 
     for (const selectedNumber of this._selected) {
@@ -52,15 +52,15 @@ export class AppComponent implements OnInit {
     }
   }
 
-  get totalNbNumbers () {
+  get totalNbNumbers() {
     return this._totalNbNumbers
   }
 
-  set power_ball_pool_size (val: any) {
+  set power_ball_pool_size(val: any) {
     this._power_ball = Number(val)
   }
 
-  get power_ball_pool_size () {
+  get power_ball_pool_size() {
     return this._power_ball
   }
 
@@ -69,9 +69,9 @@ export class AppComponent implements OnInit {
   nomalized_index: number = 0
   combinationOutput: Result = new Result(1, 1, 1)
 
-  constructor (@Inject(LOCALE_ID) public locale: string) {}
+  constructor(@Inject(LOCALE_ID) public locale: string) { }
 
-  ngOnInit () {
+  ngOnInit() {
     this.loadData()
 
     this.combbase_on_index()
@@ -79,7 +79,7 @@ export class AppComponent implements OnInit {
 
   private _odds: number = 0
 
-  getOdds (): number {
+  getOdds(): number {
     if (!this._odds) {
       this._odds = calculateOdds(
         this.totalNbNumbers,
@@ -91,7 +91,7 @@ export class AppComponent implements OnInit {
     return this._odds
   }
 
-  combination () {
+  combination() {
     this._odds = calculateOdds(
       this.totalNbNumbers,
       this.drawNbNumber,
@@ -100,9 +100,10 @@ export class AppComponent implements OnInit {
     return formatNumber(this._odds, this.locale)
   }
 
-  combbase_on_index () {
-    if (!this.oddsIndex) {
+  combbase_on_index() {
+    if (!this.oddsIndex || this.oddsIndex <= 1) {
       this.combinationOutput = new Result(1, 1, 1)
+      this.oddsIndex = 1
     }
 
     this.nomalized_index = this.oddsIndex % this.getOdds()
@@ -119,24 +120,24 @@ export class AppComponent implements OnInit {
     this.saveData()
   }
 
-  onCombIndexChange ($event: any) {
+  onCombIndexChange($event: any) {
     this.combbase_on_index()
   }
 
-  random () {
+  random() {
     this.oddsIndex = Math.floor(
       Math.random() *
-        calculateOdds(
-          this.totalNbNumbers,
-          this.drawNbNumber,
-          this.power_ball_pool_size
-        )
+      calculateOdds(
+        this.totalNbNumbers,
+        this.drawNbNumber,
+        this.power_ball_pool_size
+      )
     )
 
     this.combbase_on_index()
   }
 
-  saveData () {
+  saveData() {
     let obj: SaveData = {
       total: this.totalNbNumbers,
       draw: this.drawNbNumber,
@@ -151,7 +152,7 @@ export class AppComponent implements OnInit {
     localStorage.setItem('DATA', str)
   }
 
-  private loadData () {
+  private loadData() {
     let data = localStorage.getItem('DATA')
     if (data) {
       let parsed = JSON.parse(data) as SaveData
@@ -170,7 +171,7 @@ export class AppComponent implements OnInit {
   private _selected_power_ball: Set<number> = new Set<number>()
   private _allGeneratedNumbers: number[] = []
 
-  getTotalNumbers (): number[] {
+  getTotalNumbers(): number[] {
     if (this._allGeneratedNumbers.length != this.totalNbNumbers) {
       this._allGeneratedNumbers = Array.from(
         { length: this.totalNbNumbers },
@@ -184,7 +185,7 @@ export class AppComponent implements OnInit {
     return this._allGeneratedNumbers
   }
 
-  clickBall (ball: number) {
+  clickBall(ball: number) {
     if (!this._selected.delete(ball)) {
       if (this._selected.size < this.drawNbNumber) {
         this._selected.add(ball)
@@ -197,7 +198,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  clickBall_power_ball (ball: number) {
+  clickBall_power_ball(ball: number) {
     if (!this._selected_power_ball.delete(ball)) {
       if (this._selected_power_ball.size < 1) {
         this._selected_power_ball.add(ball)
@@ -205,25 +206,25 @@ export class AppComponent implements OnInit {
     }
   }
 
-  drawed (ball: number): string {
+  drawed(ball: number): string {
     return this._selected.has(ball)
       ? 'drawed'
       : this._inblink.has(ball)
-      ? 'blink'
-      : ''
+        ? 'blink'
+        : ''
   }
 
-  drawed_power_ball (ball: number): string {
+  drawed_power_ball(ball: number): string {
     return this._selected_power_ball.has(ball) ? 'drawed_power_ball' : ''
   }
 
   private _oddsIndex: number = 0
 
-  private _isAllNumberdrawed (): boolean {
+  private _isAllNumberdrawed(): boolean {
     return this._selected.size == this.drawNbNumber
   }
 
-  showOddIndex (): string {
+  showOddIndex(): string {
     if (!this._isAllNumberdrawed()) {
       return ''
     }
@@ -243,15 +244,15 @@ export class AppComponent implements OnInit {
     return formatNumber(this._oddsIndex, this.locale)
   }
 
-  previousDisable (): boolean {
+  previousDisable(): boolean {
     return !(this._isAllNumberdrawed() && this._oddsIndex > 1)
   }
 
-  nextDisable (): boolean {
+  nextDisable(): boolean {
     return !(this._isAllNumberdrawed() && this._oddsIndex < this._odds)
   }
 
-  previous () {
+  previous() {
     if (this._oddsIndex <= 1) {
       return
     }
@@ -266,7 +267,7 @@ export class AppComponent implements OnInit {
     this._selected = new Set(results.main_pool)
   }
 
-  next () {
+  next() {
     if (this._oddsIndex >= this._odds) {
       return
     }
@@ -283,45 +284,45 @@ export class AppComponent implements OnInit {
 
   private step = 10
 
-  stepper (): Iterable<number> {
+  stepper(): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
     return setRange(0, this.totalNbNumbers - 1, this.step)
   }
 
-  stepper_power_ball (): Iterable<number> {
+  stepper_power_ball(): Iterable<number> {
     //return new Stepper(this.totalNbNumbers - 1, this.step)
     return setRange(0, this.power_ball_pool_size - 1, this.step)
   }
 
-  substepper (start: number): Iterable<number> {
+  substepper(start: number): Iterable<number> {
     let limit = Math.min(start + this.step, this.totalNbNumbers)
     //return new Stepper(limit, 1, start + 1)
     return setRange(start + 1, limit, 1)
   }
 
-  substepper_power_ball (start: number): Iterable<number> {
+  substepper_power_ball(start: number): Iterable<number> {
     let limit = Math.min(start + this.step, this.power_ball_pool_size)
     //return new Stepper(limit, 1, start + 1)
     return setRange(start + 1, limit, 1)
   }
 
-  angleShow (): number {
+  angleShow(): number {
     return angle()
   }
 
-  angleShow2 (): number {
+  angleShow2(): number {
     return angle2()
   }
 
-  angleShow3 (): number {
+  angleShow3(): number {
     return angle3DEG()
   }
 
-  angleShowRAD (): number {
+  angleShowRAD(): number {
     return angle3()
   }
 
-  angleShowEx (): number {
+  angleShowEx(): number {
     const p1: Coordinate = {
       lat: 39.099912,
       long: -94.581213
@@ -336,7 +337,7 @@ export class AppComponent implements OnInit {
     return toDegrees(angle)
   }
 
-  angleShowExMy (): number {
+  angleShowExMy(): number {
     const p1: Coordinate = {
       lat: 45.45601525767227,
       long: -73.54996188669251
@@ -351,7 +352,7 @@ export class AppComponent implements OnInit {
     return toDegrees(angle)
   }
 
-  angleShowExMy3 (): number[] {
+  angleShowExMy3(): number[] {
     const p1: Coordinate = {
       lat: 45.45601525767227,
       long: -73.54996188669251
@@ -369,7 +370,7 @@ export class AppComponent implements OnInit {
     return [val1, -toDegrees(angle + Math.PI / 4), val2]
   }
 
-  angleShowExMyTheThisn (): number[] {
+  angleShowExMyTheThisn(): number[] {
     const p1: Coordinate = {
       lat: 45.45601525767227,
       long: -73.54996188669251
@@ -395,7 +396,7 @@ export class AppComponent implements OnInit {
     return [v1, v2, v3]
   }
 
-  myIndex (): number[] {
+  myIndex(): number[] {
     const odds = calculateOdds(50, 7, 1)
 
     const vv = this.angleShowExMyTheThisn().map(v => {
@@ -412,7 +413,7 @@ interface SaveData {
   combIndex: number
   selected: number[]
   norm_comb_index: number
-  gold_ball_pool_size : number
+  gold_ball_pool_size: number
 }
 
 const setRange = (start: number, stop: number, step: number): number[] => {

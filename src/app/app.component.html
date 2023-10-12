@@ -89,11 +89,11 @@
   <p>Odds index {{ showOddIndex() }}</p>
 
   <div>
-  <button mat-button [disabled]="previousDisable()" (click)="previous()">
-    Previous
-  </button>
-  <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
-</div>
+    <button mat-button [disabled]="previousDisable()" (click)="previous()">
+      Previous
+    </button>
+    <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
+  </div>
   <div *ngFor="let step of stepper()">
     <span
       *ngFor="let ball of substepper(step)"
@@ -118,8 +118,7 @@
 </mat-card>
 <br />
 
-<!--
+<app-comb-table total="5" nbpicks="2" nb_gold_balls="2"></app-comb-table>
 <app-comb-table total="7" nbpicks="3"></app-comb-table>
 <app-comb-table total="6" nbpicks="2"></app-comb-table>
-      <app-comb-table total="6" nbpicks="3"></app-comb-table>
--->
+<app-comb-table total="6" nbpicks="3"></app-comb-table>

@@ -8,35 +8,46 @@ import { generateCombinationsList, getOddsIndex } from '../tools'
 })
 export class CombTableComponent implements OnInit {
   @Input()
-  set total (val: any) {
+  set total(val: any) {
     this._total = parseInt(val)
   }
 
-  get total (): number {
+  get total(): number {
     return this._total
   }
 
   @Input()
-  set nbpicks (val: any) {
+  set nbpicks(val: any) {
     this._nbpicks = parseInt(val)
   }
 
-  get nbpicks (): number {
+  get nbpicks(): number {
     return this._nbpicks
+  }
+
+  @Input()
+  set nb_gold_balls(val: any) {
+    this._nb_gold_balls = parseInt(val)
+  }
+
+
+  get nb_gold_balls() : number {
+    return this._nb_gold_balls
   }
 
   private _nbpicks: number = 2
   private _total: number = 4
+  private _nb_gold_balls = 2
 
   combinations: number[][] = []
 
-  constructor () {}
+  constructor() { }
 
-  ngOnInit (): void {
+  ngOnInit(): void {
     this.createCombTable()
   }
 
-  createCombTable () {
+  createCombTable() {
     /*
         for (let combination of combinations2(+this.total, +this.nbpicks)) {
           console.log(combination);
@@ -47,7 +58,7 @@ export class CombTableComponent implements OnInit {
     //console.log("comb ", this.combinations)
   }
 
-  getRowElem (selected: number[]): string[] {
+  getRowElem(selected: number[]): string[] {
     let row: string[] = new Array(this.total)
 
     for (let num of selected) {
@@ -56,11 +67,11 @@ export class CombTableComponent implements OnInit {
     return row
   }
 
-  classFromVal (val: string): string {
+  classFromVal(val: string): string {
     return val ? 'fill' : ''
   }
 
-  getCombIndex (comb: number[], n: number, k: number): number {
+  getCombIndex(comb: number[], n: number, k: number): number {
     return getOddsIndex(comb, n, k, 1)
     //return 0
   }
