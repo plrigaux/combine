@@ -119,9 +119,10 @@ export class AppComponent implements OnInit {
 
     if (this.link) {
       this._oddsIndex = this.oddsIndex
+      this._update_selection()
+    } else {
+      this.saveData()
     }
-
-    this.saveData()
   }
 
   onCombIndexChange($event: any) {
@@ -219,12 +220,20 @@ export class AppComponent implements OnInit {
     this._selected_power_ball.add(ball)
   }
 
-  drawed(ball: number): string {
-    return this._selected.has(ball)
-      ? 'drawed'
-      : this._inblink.has(ball)
-        ? 'blink'
-        : ''
+  drawed(ball: number): string[] {
+
+    const cls: string[] = []
+
+    if (this._selected.has(ball)) {
+      cls.push('drawed')
+      if (!this._isAllNumberdrawed()) {
+        cls.push('not_completed')
+      }
+    } else if (this._inblink.has(ball)) {
+      cls.push('blink')
+    }
+
+    return cls
   }
 
   drawed_power_ball(ball: number): string {
@@ -317,7 +326,7 @@ export class AppComponent implements OnInit {
     this._selected = new Set(results.main_pool)
     this.set_gold_ball(results.power_ball)
     //console.log("after", this._selected, this._selected_power_ball)
-    this.updateSelectorIndex() 
+    this.updateSelectorIndex()
   }
 
   private step = 10
@@ -346,13 +355,13 @@ export class AppComponent implements OnInit {
   }
 
   all_balls(): Iterable<number> {
-    return Array.from({length: this.totalNbNumbers}, (_, i) => i + 1) 
+    return Array.from({ length: this.totalNbNumbers }, (_, i) => i + 1)
   }
 
   golden_ball(): Iterable<number> {
     //let limit = Math.min(start + this.step, this.power_ball_pool_size)
     //return new Stepper(limit, 1, start + 1)
-    return Array.from({length: this.power_ball_pool_size}, (_, i) => i + 1) 
+    return Array.from({ length: this.power_ball_pool_size }, (_, i) => i + 1)
   }
   /*
     angleShow(): number {

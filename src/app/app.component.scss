@@ -38,6 +38,7 @@ mat-sidenav-container {
 */
 p {
   font-size: 2rem;
+  line-height:normal
 }
 
 $ball-size: 2em;
@@ -60,6 +61,10 @@ $ball-border: 2px;
 
 .drawed {
   background-color: cornflowerblue;
+}
+
+.not_completed {
+  filter: grayscale(70%);
 }
 
 .drawed_power_ball {
