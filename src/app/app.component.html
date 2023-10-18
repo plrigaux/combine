@@ -85,8 +85,9 @@
 </mat-card>
 <mat-card>
   <p>
-      <mat-button-toggle value="link">
-        <mat-icon>link</mat-icon> Link</mat-button-toggle>
+
+    <mat-slide-toggle [(ngModel)]="link">Slide Toggle linkeed: {{link}}</mat-slide-toggle>
+
   </p>
   <mat-card-title>Get the oddsIndex</mat-card-title>
 

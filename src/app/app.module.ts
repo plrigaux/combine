@@ -11,8 +11,7 @@ import { MatInputModule } from '@angular/material/input'
 import { CombTableComponent } from './comb-table/comb-table.component'
 import { MatCardModule } from '@angular/material/card'
 import { FormsModule } from '@angular/forms'
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [AppComponent, CombTableComponent],
@@ -27,7 +26,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatInputModule,
     MatCardModule,
     FormsModule,
-    MatButtonToggleModule
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

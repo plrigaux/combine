@@ -1,17 +1,10 @@
 import { formatNumber } from '@angular/common'
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core'
 import {
-  angle,
-  angle2,
-  angle3,
-  angle3DEG,
-  calculate,
   calculateOdds,
-  Coordinate,
   getCombinationfromIndex,
   getOddsIndex,
   Result,
-  toDegrees
 } from './tools'
 
 @Component({
@@ -176,6 +169,8 @@ export class AppComponent implements OnInit {
       this.set_gold_ball(parsed.selected_gold_ball)
       this.nomalized_index = parsed.norm_comb_index
       this.power_ball_pool_size = parsed.gold_ball_pool_size
+
+      this.updateSelectorIndex()
     }
   }
 
@@ -261,6 +256,12 @@ export class AppComponent implements OnInit {
       this.power_ball_pool_size
     )
 
+    if (this.link) {
+      this.combinationOutput.power_ball = gold_ball
+      this.combinationOutput.main_pool = selectedSortedArray
+      this.oddsIndex = this._oddsIndex
+    }
+
     this.saveData()
   }
 
@@ -312,10 +313,11 @@ export class AppComponent implements OnInit {
       this._oddsIndex
     )
 
-    console.log("before", this._selected, this._selected_power_ball)
+    //console.log("before", this._selected, this._selected_power_ball)
     this._selected = new Set(results.main_pool)
     this.set_gold_ball(results.power_ball)
-    console.log("after", this._selected, this._selected_power_ball)
+    //console.log("after", this._selected, this._selected_power_ball)
+    this.updateSelectorIndex() 
   }
 
   private step = 10
