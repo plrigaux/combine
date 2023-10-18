@@ -98,10 +98,10 @@
     </button>
     <button mat-button [disabled]="nextDisable()" (click)="next()">Next</button>
   </div>
-  <div *ngFor="let step of stepper()">
-    <span
-      *ngFor="let ball of substepper(step)"
-      class="numberCircle"
+  <div class="parent_ball">
+    <span 
+      *ngFor="let ball of all_balls()"
+      class="numberCircle child_ball"
       [ngClass]="drawed(ball)"
       (click)="clickBall(ball)"
       >{{ ball }}</span
@@ -109,14 +109,15 @@
   </div>
   <ng-template [ngIf]="power_ball_pool_size > 1">
     <h1>Power Ball</h1>
-    <div *ngFor="let step of stepper_power_ball()">
+
+    <div class="parent_ball">
       <span
-        *ngFor="let ball of substepper_power_ball(step)"
-        class="numberCircle"
-        [ngClass]="drawed_power_ball(ball)"
-        (click)="clickBall_power_ball(ball)"
-        >{{ ball }}</span
-      >
+      *ngFor="let ball of golden_ball()"
+      class="numberCircle"
+      [ngClass]="drawed_power_ball(ball)"
+      (click)="clickBall_power_ball(ball)"
+      >{{ ball }}</span
+    >
     </div>
   </ng-template>
 </mat-card>

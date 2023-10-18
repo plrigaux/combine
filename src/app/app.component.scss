@@ -41,17 +41,21 @@ p {
 }
 
 $ball-size: 2em;
+$ball-font: 32px;
+$ball-padding: 0.5rem;
+$ball-margin: 0.5rem;
+$ball-border: 2px;
 .numberCircle {
   display: inline-block;
   width: $ball-size;
   line-height: $ball-size;
   border-radius: 50%;
   text-align: center;
-  font-size: 32px;
-  border: 2px solid #666;
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
+  font-size: $ball-font;
+  border: $ball-border solid #666;
+  margin-right: $ball-margin;
+  margin-bottom:$ball-margin;
+  padding:$ball-padding;
 }
 
 .drawed {
@@ -63,14 +67,23 @@ $ball-size: 2em;
 }
 
 @keyframes blinker {
-  from {background-color: grey;}
-  to {background-color: white;}
+  from {
+    background-color: grey;
+  }
+  to {
+    background-color: white;
+  }
 }
 
 .blink {
   animation-name: blinker;
   animation-duration: 0.5s;
-  animation-iteration-count : 3
-  
+  animation-iteration-count: 3;
+}
+
+.parent_ball {
+  font-size: $ball-font;
+  max-width: calc(($ball-size + 2 * ($ball-padding + $ball-border) + $ball-margin)* 10);
+  //max-width: calc(84px * 10);
 }
 

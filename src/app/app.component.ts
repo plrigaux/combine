@@ -343,6 +343,15 @@ export class AppComponent implements OnInit {
     return setRange(start + 1, limit, 1)
   }
 
+  all_balls(): Iterable<number> {
+    return Array.from({length: this.totalNbNumbers}, (_, i) => i + 1) 
+  }
+
+  golden_ball(): Iterable<number> {
+    //let limit = Math.min(start + this.step, this.power_ball_pool_size)
+    //return new Stepper(limit, 1, start + 1)
+    return Array.from({length: this.power_ball_pool_size}, (_, i) => i + 1) 
+  }
   /*
     angleShow(): number {
       return angle()
