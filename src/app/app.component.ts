@@ -59,15 +59,22 @@ export class AppComponent implements OnInit {
 
   link: boolean = false
   drawNbNumber: any = 0
-  oddsIndex: any = 0
+  odd_index_input: number = 1
   nomalized_index: number = 0
   combinationOutput: Result = new Result(1, 1, 1)
 
   constructor(@Inject(LOCALE_ID) public locale: string) { }
 
+  set_odd_index_input(val: any) {
+    let a = parseInt(val)
+    if (isNaN(a)) {
+      a = 1
+    }
+    this.odd_index_input = a
+  }
+
   ngOnInit() {
     this.loadData()
-
     this.combbase_on_index(1)
   }
 
@@ -94,15 +101,15 @@ export class AppComponent implements OnInit {
     return formatNumber(this._odds, this.locale)
   }
 
-  combbase_on_index(oddsIndex: number) {
-
-    if (!oddsIndex || oddsIndex <= 1) {
+  combbase_on_index(odd_index_input_change: any) {
+    console.log("odd_index_input", odd_index_input_change)
+    if (!odd_index_input_change || odd_index_input_change <= 1) {
       //this.combinationOutput = new Result(1, 1, 1)
-      oddsIndex = 1
+      odd_index_input_change = 1
     }
-
-    this.oddsIndex = oddsIndex
-    this.nomalized_index = this.oddsIndex % this.getOdds()
+    console.log("odd_index_input", odd_index_input_change)
+    this.set_odd_index_input( odd_index_input_change)
+    this.nomalized_index = this.odd_index_input % this.getOdds()
 
     if (this.nomalized_index === 0) {
       this.nomalized_index = this.getOdds()
@@ -118,7 +125,7 @@ export class AppComponent implements OnInit {
     this.combinationOutput = results
 
     if (this.link) {
-      this._oddsIndex = this.oddsIndex
+      this._oddsIndex = this.odd_index_input
       this._update_selection()
     } else {
       this.saveData()
@@ -126,7 +133,7 @@ export class AppComponent implements OnInit {
   }
 
   onCombIndexChange($event: any) {
-    this.combbase_on_index(this.oddsIndex)
+    this.combbase_on_index(this.odd_index_input)
   }
 
   random() {
@@ -146,7 +153,7 @@ export class AppComponent implements OnInit {
     let obj: SaveData = {
       total: this.totalNbNumbers,
       draw: this.drawNbNumber,
-      combIndex: this.oddsIndex,
+      odd_index_input: this.odd_index_input,
       selected: [...this._selected],
       selected_gold_ball: this.get_selected_gold_ball(),
       norm_comb_index: this.nomalized_index,
@@ -163,7 +170,7 @@ export class AppComponent implements OnInit {
     if (data) {
       let parsed = JSON.parse(data) as SaveData
 
-      this.oddsIndex = parsed.combIndex
+      this.set_odd_index_input ( parsed.odd_index_input)
       this.totalNbNumbers = parsed.total
       this.drawNbNumber = parsed.draw
       this._selected = new Set(parsed.selected)
@@ -268,7 +275,7 @@ export class AppComponent implements OnInit {
     if (this.link) {
       this.combinationOutput.power_ball = gold_ball
       this.combinationOutput.main_pool = selectedSortedArray
-      this.oddsIndex = this._oddsIndex
+      this.odd_index_input = this._oddsIndex
     }
 
     this.saveData()
@@ -468,7 +475,7 @@ export class AppComponent implements OnInit {
 interface SaveData {
   total: number
   draw: number
-  combIndex: number
+  odd_index_input: number
   selected: number[]
   selected_gold_ball: number
   norm_comb_index: number
